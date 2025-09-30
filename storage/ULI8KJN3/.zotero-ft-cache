@@ -1,0 +1,1471 @@
+Noname manuscript No.
+(will be inserted by the editor)
+Towards a sustainable exploitation of the geosynchronous orbital region
+Ioannis Gkolias · Camilla Colombo
+Received: date / Accepted: date
+Abstract In this work the orbital dynamics of Earth satellites about the geosynchronous altitude are explored, with primary goal to assess current mitigation guidelines as well as to discuss the future exploitation of the region. A thorough dynamical mapping was conducted in a high-definition grid of orbital elements, enabled by a fast and accurate semi-analytical propagator, which considers all the relevant perturbations. The results are presented in appropriately selected stability maps to highlight the underlying mechanisms and their interplay, that can lead to stable graveyard orbits or fast re-entry pathways. The natural separation of the long-term evolution between equatorial and inclined satellites is discussed in terms of post-mission disposal strategies. Moreover, we confirm the existence of an effective cleansing mechanism for inclined geosynchronous satellites and discuss its implications in terms of current guidelines as well as alternative mission designs that could lead to a sustainable use of the geosynchronous orbital region.
+Keywords geosynchronous · dynamics · artificial satellites · orbital stability · disposal · re-entry
+1 Introduction
+Artificial Earth satellites provide a wide variety of services to the humankind. Weather monitoring and prediction, marine and air traffic management, telecommunications, television broadcasting, geolocalization, just to name a few, heavily reside on satellite information. Especially important to these activities is the
+I. Gkolias Department of Aerospace Science and Technology, Politecnico di Milano, Via la Masa 34, 20156 Milan, Italy E-mail: ioannis.gkolias@polimi.it
+C. Colombo Department of Aerospace Science and Technology, Politecnico di Milano, Via la Masa 34, 20156 Milan, Italy E-mail: camilla.colombo@polimi.it
+arXiv:1904.00473v1 [astro-ph.EP] 31 Mar 2019
+
+
+2 Ioannis Gkolias, Camilla Colombo
+contribution of satellites orbiting at geosynchronous altitude (GEO1). GEO satellites have a semi-major axis of about RGEO = 42165 km and orbit about the Earth at the same rate that the Earth rotates around its axis. Due to this commensurability, the geosynchronous region provides us unique groundtracks that have been heavily exploited since the beginning of the Space Era. However, this came with a toll, the region about Earth’s Clarke belt has been populated with artificial objects, most of them debris. GEO is nowadays the second most populated orbital region, after the low Earth orbits (LEO), with a couple of thousand catalogued objects and the list is continuously growing2.
+The importance of the GEO region dictated to satellite operators to take measures at their missions’ operational end-of-life. Indeed, even the very first GEO equatorial satellites applied some kind of re-orbiting manoeuvres to clear the longitude slots for future missions [24]. In the early 90s, when the first disposal studies were performed for equatorial GEO satellites [14], the use of super-synchronous graveyard orbits was proposed as an economical and effective solution to reduce the collision probability in the region. For the following years this was the norm followed by the operators, and is used up to now, modified to take also into account the perigee height variations due to solar radiation pressure perturbations [21, 13]. The aforementioned ideas have sculpted the Inter Agency Debris Coordination Committee (IADC) set of mitigation guidelines for decommissioning GEO spacecraft [30] and the European Space Agency (ESA) instructions set for the ESA-operated GEO missions [23]. The guidelines suggest that a decommissioned GEO space system should: 1) increase the altitude of perigee by 235 km plus a factor accounting for the solar radiation pressure perturbations and 2) to circularise the graveyard orbit such that the eccentricity is of the order of 10−3.
+However, from a sustainability point of a view, the use of graveyard orbits as suggested by the current mitigation guidelines, will keep increasing the collision probability in GEO [32]. Moreover, some further considerations support the need to investigate alternative ways of GEO exploitation. For instance, defunct satellites can act also as sources of secondary debris, even if there are no collisions. Satellites in graveyard orbits are subject to solar radiation torques that can constantly speed up their rotation [1]. The structural integrity of a space system rotating at several times per minute is not guaranteed. In fact, a population of high-area-over-mass (HAMR) object observed in GEO [52] was identified as multi-layer insulation (MLI) foils from satellites in graveyard orbits. The dynamics of these objects are quite different from the parent satellites [54] due to their higher Area-to-mass (A/m) ratio. Their long
+1 The acronym GEO in this work is used as Geosynchronous Earth Orbits, therefore, representing all the orbits with a period of about one sidereal day, and not only the equatorial ones (also known as Geostationary Equatorial Orbits). 2 https://www.sdo.esoc.esa.int/environment report/Space Environment Report latest.pdf (retrieved at 28/3/2019)
+
+
+Towards a sustainable GEO 3
+term orbital evolution suggests that they cannot be contained in the nominal graveyard orbit and they could potentially cross the GEO protected region3. Alternative solutions would require to either try to manoeuvre the satellite to a heliocentric orbit, but it is a cost-inefficient solution, or try to achieve atmospheric re-entry via natural perturbations. Unfortunately, the most effective perturbation that leads to the re-entry of close Earth satellites, namely the atmospheric drag, is not present at GEO altitude. Nevertheless, re-entry within reasonable time-scales could be achieved also by exploiting other type of perturbations. In their study of LEO satellites [3, 4] suggested the possibility of re-entry due to solar radiation pressure resonances, but unfortunately this mechanism is also not effective for GEO. A more promising strategy would be to exploit the lunisolar gravitational perturbations [48, 19], an idea that has been already been suggested for satellites in the Medium Earth Orbits (MEO) region [2, 49, 53, 5] and Highly Elliptical Orbits (HEO) [31, 15]. A living example of a mission that exploited natural lunisolar effects for its re-entry strategy is the INTEGRAL spacecraft in HEO. ESA operators manoeuvred INTEGRAL in 2015 such that it will perform a safe re-entry in 2029. The optimal manoeuvre design to enhance the effect of lunisolar perturbations [17, 6] was used as starting point for the definition of the re-entry trajectory sequence [46]. In order to assess the possibility of re-entry due to lunisolar perturbations, the natural evolution of orbits at geosynchronous altitude has to be well understood. The dynamics of the geosynchronous equatorial orbits have been studied in the literature, both analytically and numerically [41, 8, 11, 25]. Some aspects of the dynamics of the highly inclined GEO orbits have also been presented [20, 55, 56]. In this work, we will revisit the dynamics of geosynchronous region, in terms of searching for feasible re-entering highways or stable graveyard orbits when re-entry is not feasible. Having in mind a propagation span of at least 120 years, we employ an efficient semi-analytical propagator [16] that takes into account all the relevant forces at geosynchronous orbits in a single-averaged formulation (see Appendix A). The effect of Earth’s precession, which is usually omitted, but turns out to be relevant for long-term propagations at high altitudes [29], has also been efficiently formulated and included (Appendix B). Three different mapping methods are selected to highlight the different aspects of the dynamics. First, we study the contribution of the tesseral effects on the eccentricity growth for geosynchronous orbits. Then we employ dynamical maps over the angle-like variables, namely the argument of the perigee and the right ascension of the ascending node of the satellite, to explore the contribution of the different perturbations and their interactions. Finally, a global picture of the geosynchronous region in action-like variables (eccentricity and inclination) is presented to identify the orbital regimes where re-entry solutions are viable.
+3 The GEO protected region is defined at the semi-major axis aprot = RGEO ± 200 km
+and a latitude sector from 15◦ South to 15◦ North [30, 23].
+
+
+4 Ioannis Gkolias, Camilla Colombo
+A natural separation is observed in terms of the natural evolution of initially low- and high-inclined orbits. Long-term stability and low eccentricity variations is the norm for low inclinations while an abundance of re-entering orbits exist in high inclinations. The eccentricity growth maps allow us to identify particular re-entry orbits that are interesting for future mission planning. We study the lifetimes of those orbits and try to identify the conditions that could lead to fast re-entry. Another interesting interaction that is revealed is the interplay of solar radiation and lunisolar perturbations for low-eccentric orbits. We present a case where, despite the usual behaviour where opening a solar-sail at the end-of-life enhances the de-orbiting process, this is not happening for GEO orbits. Finally, a general assessment of the current guidelines in GEO is made based on the current population and the underlying dynamics. The case of the Sirius constellation provides a strong case why a single equation guideline is not adequate to fully regulate the dynamically rich geosynchronous region. The paper is organised in the following way, in Sec. 2 the single-averaged model is presented, in Sec. 3 we present the results of the dynamical mapping of the geosynchronous region, in Sec. 4 the findings in terms of post-mission disposal planning are discussed and in Sec. 5 we present our conclusions.
+2 Orbit propagation with semi-analytical techniques
+The methods used to analyse the long-term orbital evolution of geosynchronous orbits are briefly discussed here. A detailed description of the force model is given in Appendix A. Aiming for a 120-years integration time span, a singleaveraged semi-analytical propagation was opted for, which is a typical practise for Earth satellite orbits. The PlanODyn [16] orbital analysis suite was adopted and further developed to include the relevant perturbation effects. For the main force model, the contributions of Earth’s geopotential, third body perturbation from the Sun and the Moon and the effect of solar radiation pressure were considered. Additionally, a revised version of Earth’s general precession contribution to the secular evolution was developed and it is presented in the Appendix B. For the geopotential force a fourth order and degree truncation is chosen, on the grounds that adding higher order harmonics did not produce any noticeable effects. For the zonal harmonics the first order averaged contributions were considered [36] and the second order contribution due to J2 (J22) [9] was also included. On the other hand, for the tesseral effects, only the resonant contributions relevant for geosynchronous orbits were considered [36]. The third body potential is expanded up to fourth order in the parallactic factor and is averaged in closed form over the mean anomaly of the satellite [34, 15]. This is more efficient computationally [40] instead of using a series expansion representation (see [12] and references therein). The positions of the perturbing bodies, i.e. the Sun and Moon, are computed from analytical time-series truncated to a sufficient order for our work [45]. The solar radia
+
+
+Towards a sustainable GEO 5
+42130
+42140
+42150
+42160
+42170
+42180
+42190
+42200
+0 20 40 60 80 100 120
+0
+0.005
+0.01
+0.015
+0.02
+0 20 40 60 80 100 120
+0
+2
+4
+6
+8
+10
+12
+14
+0 20 40 60 80 100 120
+semi-major axis
+time (years)
+eccentricity
+time (years)
+high- delity
+single-averaged
+inclination (◦)
+time (years)
+Fig. 1 The 120 years orbital evolution of an equatorial GEO satellite (a = RGEO, e = 0.01,
+i = 0.1◦, Ω = 10◦, ω = 50◦, M = 0◦ and initial epoch 21/06/2020 at 06:43:12.0). The semianalytical propagation (red line) is in excellent agreement with a high-fidelity model (grey line) for the same initial conditions.
+tion pressure is also included under a cannonball approximation [35, 39]. The Earth’s shadow is not taken into account since the constant Sun exposure is valid at geosynchronous altitude. Finally, Earth’s general precession is also considered (Appendix B). In Fig. 1 a validation of the full force model for the GEO region is presented, including all the above mentioned contributions. An initial condition for a GEO equatorial satellite (a = RGEO, e = 0.01, i = 0.1◦, Ω = 10◦, ω = 50◦, M = 0◦ and initial epoch 21/06/2020 at 06:43:12.0) is propagated for 120 years with the semi-analytical method (red line) and is compared with a high-fidelity (grey line) integration. The high-fidelity model is in Cartesian coordinates, using Cunningham’s algorithm [47] for the geopotential calculations and NASA’s SPICE tool-kit4 for the ephemerides of the Sun and the Moon and to retrieve the transformation matrices related to the motion of Earth’s rotation axis. The semi-analytical propagation used in this work is in excellent agreement with the high-fidelity one, validating the force model selection and the use of a single-averaged formulation. Moreover, the singleaveraged formulation is a few orders of magnitudes faster, which allows us to proceed with a massive and accurate characterisation of the phase space.
+3 Dynamical Mapping
+In this Section, a dynamical study of the GEO region is performed, with the goal of presenting a detailed and complete study of post-mission disposal opportunities. Our work focuses on two main elements: the study of the GEO area in its entirety with a complete force model and the search not only for good graveyard solutions, but also for potentially exploitable re-entry trajectories. In this work we considered only dynamical indicators associated with the eccentricity evolution of the orbit, which is mainly driving the perigee varia
+4 https://naif.jpl.nasa.gov/naif/index.html
+
+
+6 Ioannis Gkolias, Camilla Colombo
+tions and is the key in studying and planning post-mission disposal strategies. Moreover, other type of dynamical indicators based on the exponential divergence of nearby orbits, could fail to provide a clear picture for our purposes. Namely, in the region of the separatrix of the geosynchronous resonance, it is known that there exist chaotic behaviour [8,54,11]. However, in disposal design applications, we are not interested in the chaotic evolution with respect to any of the action variables, but rather in the chaotic behaviour manifesting as eccentricity growth. The fact that the use of chaotic indicators in disposal design can be missleading was also mentioned in a recent work [18]. Therefore, we focus our studies on the eccentricity variations and more specifically, two types of indicators are used. First the typical diameter of the eccentricity
+Diam(e) = |emax − emin| (1)
+defined as the absolute difference between the minimum and the maximum values of the eccentricity obtained along the propagation time span. The second indicator, mainly used in Sec. 3.3, is a normalised eccentricity diameter and is designed to study the eccentricity variations along a wide range of initial eccentricities and/or semi-major axis. It is defined as [26]:
+∆e = |e0 − emax|
+|e0 − ere−entry| (2)
+where e0 is the initial eccentricity, emax its maximum value along a propagation and ere−entry is defined as the value of eccentricity for which the perigee value becomes equal to a re-entry condition. Assuming the re-entry condition of 120 km above the surface of the Earth (are−entry = REarth + 120 km) for a satellite at the GEO region the re-entry value for the eccentricity is ere−entry ≈ 0.846. The behaviour of ∆e then is the following: when the eccentricity stays bounded about its initial value ∆e → 0, while if the eccentricity grows enough to reach the re-entry value ∆e → 1. In other words, ∆e gives the fraction of the physically available phase-space that the eccentricity evolution has covered. For the numerical exploration the single-averaged formulation was propagated numerically, using a BulirschStoer numerical integrator with automatic time-step control, imposing a local relative tolerance of 10−13. A propagation is terminated if the re-entry condition is met. Studying the full 6-dimensional space of orbital elements for all possible configurations could be a really involved task, so instead we have selected to study appropriate slices of it. Various 2-dimensional grids of initial conditions were chosen with a resolution of 201 × 201 orbits, yielding 40400 orbits per plot presented here. For each orbit, the computational time is a few seconds for a 120-years time span, giving less than a day computational time on average for each map5. A total amount of more than 50 million orbits were propagated in the GEO region, for the needs of the ReDSHIFT project [51].
+5 The simulations were carried out in the Milkyway server, which is equipped with 4 Intel Xeon CPU E5-4620 v4 at 2.10 GHz with a total amount of 40 physical cores.
+
+
+Towards a sustainable GEO 7
+For the selected grids of initial conditions, two values of the effective Areato-mass ratio was used, a low one A/m = 0.012 m2/kg, which is the typical value for decommissioned satellites, and a high one A/m = 1.0 m2/kg, which represents a satellite that carries an area-augmenting device (i.e. a solar sail kit) that is deployed at its end-of-life. The reflectivity coefficient was constant and equal to cR = 1. Finally, the initial epoch was selected on the 21/06/2020 at 06:43:12.0.
+3.1 Tesseral maps
+The first effect to be explored is the interaction between the GEO tesseral resonance and the other perturbations. For this reason, a series of eccentricity diameter maps on a two dimensional grid of initial semi-major a and the 24hour resonant angle λ = ω + Ω + M − θg were produced, with ω, Ω, M the argument of perigee, the right ascension of the ascending node and the mean anomaly of the satellite respectively, and θg is the Greenwich hour angle. There exist several ways to vary the resonant angle, but it was decided to do so only by varying the mean anomaly at the initial epoch. This selection allows to focus on the different dynamics induced purely from the tesseral contribution. In fact, varying the initial ω or Ω, would not complement the study as changing those two angles would also affect the initial configuration with respect to the lunisolar and solar radiation pressure perturbations and would contaminate the results. In Fig. 2 the mapping for a typical satellite with A/m = 0.012 m2/kg is presented. Both a low-inclined (left column) and high-inclined (right column) configurations are presented. The first thing to mention is the difference in the order of magnitude of the eccentricity diameters with respect to the inclination. The low-inclined orbits exhibit a variation of the order of 10−3, while for the highly inclined ones it is two orders of magnitude larger. A low-eccentricity (top row) and a high-eccentricity (bottom row) initial condition is also presented for each case. In all cases we observe a clear distinction between the dynamics within the geosynchronous resonance and outside of it. The low-eccentricity and low-inclination is the only case where the eccentricity variation is larger than the surrounding altitudes. The separatrix of the tesseral resonance is also obvious in all the cases, with the two stable equilibria6 at λ = 74.94◦ and λ = 254.91◦ and the unstable at λ = 161.91◦ and λ = 348.48◦ (red points in Figs. 2 and 3). Moreover, the width of the resonance is reduced from 80 km in the low-inclination case to about 50 km in the high-inclination case. The splitting of the separatrix is also apparent, particularly in the low-inclination high-eccentricity case, due to the inclusion of odd tesseral-harmonics in the equations of motion. Finally, for the high-inclination case, we observe smaller eccentricity variations in the low initial eccentricity case than in the high initial eccentricity case, which is an effect due to the lunisolar perturbations.
+6 Notice that the x-axes of Fig 2 and 3 report the value of λ + θg0 , where θg0 = 10.73◦ is the Greenwich hour angle at the initial epoch.
+
+
+8 Ioannis Gkolias, Camilla Colombo
+−100
+−75
+−50
+−25
+0
+25
+50
+75
+100
+0 60 120 180 240 300 360
+a − RGEO (km)
+λ + θg0 (◦)
+a
+1.50
+1.52
+1.54
+1.56
+1.58
+1.60
+1.62
+1.64
+1.66
+Diam(e) · 10−3
+e = 0.01
+i = 10◦
+A/m = 0.012 m2
+kg
+−100
+−75
+−50
+−25
+0
+25
+50
+75
+100
+0 60 120 180 240 300 360
+a − RGEO (km)
+λ + θg0 (◦)
+a
+5.92
+5.94
+5.96
+5.98
+6.00
+6.02
+6.04
+6.06
+6.08
+Diam(e) · 10−1
+e = 0.01
+i = 60◦
+A/m = 0.012 m2
+kg
+−100
+−75
+−50
+−25
+0
+25
+50
+75
+100
+0 60 120 180 240 300 360
+a − RGEO (km)
+λ + θg0 (◦)
+a
+1.92
+1.93
+1.94
+1.95
+1.96
+1.97
+1.98
+1.99
+2.00
+2.01
+2.02
+Diam(e) · 10−2
+e = 0.2
+i = 10◦
+A/m = 0.012 m2
+kg
+e=0 = 10
+A/ = 0. 12 2
+−100
+−75
+−50
+−25
+0
+25
+50
+75
+100
+0 60 120 180 240 300 360
+a − RGEO (km)
+λ + θg0 (◦)
+a
+2.18
+2.20
+2.22
+2.24
+2.26
+2.28
+2.30
+2.32
+Diam(e) · 10−1
+e = 0.2
+i = 60◦
+A/m = 0.012 m2
+kg
+Fig. 2 Dynamical maps on the semi-major axis - geosynchronous resonant angle (a − λ) plane for the low area-to-mass case A/m = 0.012 m2/kg. The left column corresponds to low inclination orbits (i = 10◦) and the right column to the high-inclination ones (i = 60◦). The top row shows the evolution of low-eccentricity (e = 0.01), while the bottom row that of high-eccentricity orbits (e = 0.2). The colormap corresponds to the value of the eccentricity diameter over 120 years. Notice the narrow range between the minimum and maximum eccentricity diameter among all the maps.
+Fig. 3 shows a similar mapping for the case of a GEO satellite with an area-augmenting device that allows an A/m = 1.0 m2/kg at the end-of-life. In this case, the eccentricity variations in low-inclination case are an order of magnitude higher than in previous case, while in the high-inclination case the variations are similar. The other features are similar, again with the separatrix apparently dividing the phase-space, the width of the resonance decreasing with the inclination and the low-eccentricity high-inclination case exhibiting higher eccentricity variations than the high-eccentricity high-inclination case. Finally, the additional structures that appear as curvy lines above and below
+
+
+Towards a sustainable GEO 9
+−100
+−75
+−50
+−25
+0
+25
+50
+75
+100
+0 60 120 180 240 300 360
+a − RGEO (km)
+λ + θg0 (◦)
+a
+2.40
+2.41
+2.42
+2.43
+2.44
+2.45
+2.46
+2.47
+2.48
+Diam(e) · 10−2
+e = 0.01
+i = 10◦
+A/m = 1.0 m2
+kg
+−100
+−75
+−50
+−25
+0
+25
+50
+75
+100
+0 60 120 180 240 300 360
+a − RGEO (km)
+λ + θg0 (◦)
+a
+6.31
+6.32
+6.33
+6.34
+6.35
+6.36
+6.37
+6.38
+6.39
+6.40
+Diam(e) · 10−1
+e = 0.01
+i = 60◦
+A/m = 1.0 m2
+kg
+−100
+−75
+−50
+−25
+0
+25
+50
+75
+100
+0 60 120 180 240 300 360
+a − RGEO (km)
+λ + θg0 (◦)
+a
+3.88
+3.90
+3.92
+3.94
+3.96
+3.98
+4.00
+4.02
+4.04
+Diam(e) · 10−2
+e = 0.2
+i = 10◦
+A/m = 1.0 m2
+kg
+−100
+−75
+−50
+−25
+0
+25
+50
+75
+100
+0 60 120 180 240 300 360
+a − RGEO (km)
+λ + θg0 (◦)
+a
+2.24
+2.25
+2.26
+2.27
+2.28
+2.29
+2.30
+2.31
+2.32
+2.33
+Diam(e) · 10−1
+e = 0.2
+i = 60◦
+A/m = 1.0 m2
+kg
+Fig. 3 Dynamical maps on the semi-major axis - geosynchronous resonant angle (a − λ) plane for the high area-to-mass case A/m = 1.0 m2/kg. The left column corresponds to lowinclination orbits (i = 10◦) and the right column to high-inclination ones (i = 60◦). The top row shows the evolution of low-eccentricity (e = 0.01), while the bottom row that of high-eccentricity orbits (e = 0.2). The colormap corresponds to the value of the eccentricity diameter over 120 years. Notice the narrow range between the minimum and maximum eccentricity diameter among all the maps.
+the separatrix are associated with secondary resonances related to the solarradiation pressure.
+The phase-space exploration of the geosynchronous resonance reveals some interesting features of the phase-space, the most prevalent being the separatrix that links the two unstable equilibria. However, one should also notice that the overall differences in the eccentricity variations along the same map are very small. From our investigation it is apparent that the chaos detected in previous works [8, 11, 54] both for low and high area-to-mass objects is not resulting in any exploitable eccentricity growth with respect to nearby orbits with the same phasing with respect to lunisolar and solar radiation pressure
+
+
+10 Ioannis Gkolias, Camilla Colombo
+perturbations. Therefore, the conclusion of the resonant angle investigation is that, placing a satellite on the unstable equilibria of the tesseral resonance does not present any significant re-entry opportunities.
+3.2 Disposal maps
+After having excluded the position of the satellite within the geosynchronous resonance as a source of interesting re-entry possibilities, here we investigate the orbital configuration with respect to the Sun and the Moon. The study is performed over a grid of initial argument of the perigee and right ascension of the ascending node. A similar approach has been used for the disposal design in the MEO region [2, 5]. The advantage of this kind of approach is that it allows, given a particular point in the action-like variables space (a, e, i), to study its re-entry properties based on the initial orientation of the orbit with respect to the perturbing bodies. In addition, it is a good tool to study the interactions between all the angle related effects caused by lunisolar perturbations and solar radiation pressure. In Fig. 4 we present how the contributions of the different effects mesh up to create a final disposal map for the GEO region (a = RGEO). The initial orbital eccentricity is e = 0.1 and the initial inclination is 40◦ with respect to the equator. The driving force that shapes the eccentricity growth at this altitude is the gravitational lunisolar interaction. Indeed, the eccentricity variation due to the geopotential and the solar radiation pressure are 3 orders of magnitude smaller than the those from the third body perturbations. Basically, under the isolated third body dynamics, all orbits with initial node of 180 degrees are reaching eccentricity values close to ere−entry. The way, however, that the geopotential and solar radiation pressure affect the combined effect evolution, is by fixing the frequency of the perigee oscillations. The tuned frequency of perigee, could suppress the Lidov-Kozai type dynamics [42, 37] induced by the combined solar and lunar attractions. Therefore, the result of the evolution under the full dynamical model is quite complex and produces interesting dynamical structures. Another interesting feature of those maps is that the position of the instabilities is mainly associated with the orientation of the node of the satellite with respect to the node of the Moon at the starting epoch. Therefore, changing the starting epoch could horizontally shift the appearing structures [2] and this feature repeats itself with a period of about 18.6 years, which is the nodal precession period of the Moon (also known as the Saros cycle). This adds a third dimension in the post-disposal design scheme and opens up for interesting design opportunities [49]. Namely, at the end-of-life one could wait for the value of the node to take correct value to maximise the effect of the lunisolar contributions. In Fig. 5 a set of disposal maps for a satellite with low initial eccentricity e = 0.001 is presented. Three different initial inclinations are presented i = 0◦ (left column), i = 45◦ (centre column) and i = 75◦ (right column). For
+
+
+Towards a sustainable GEO 11
+0
+60
+120
+180
+240
+300
+360
+0 60 120 180 240 300 360
+ω (◦)
+Ω (◦)
+only geopotential
+1.00
+2.00
+3.00
+4.00
+5.00
+6.00
+7.00
+8.00
+9.00
+Diam(e) · 10−4
+0
+60
+120
+180
+240
+300
+360
+0 60 120 180 240 300 360
+ω (◦)
+Ω (◦)
+only lunisolar
+0.00
+1.00
+2.00
+3.00
+4.00
+5.00
+6.00
+7.00
+8.00
+9.00
+Diam(e) · 10−1
+0
+60
+120
+180
+240
+300
+360
+0 60 120 180 240 300 360
+ω (◦)
+Ω (◦)
+only solar radiation pressure
+1.00
+1.20
+1.40
+1.60
+1.80
+2.00
+2.20
+2.40
+2.60
+2.80
+Diam(e) · 10−4
+0
+60
+120
+180
+240
+300
+360
+0 60 120 180 240 300 360
+ω (◦)
+Ω (◦)
+full model
+0.00
+0.05
+0.10
+0.15
+0.20
+0.25
+0.30
+0.35
+Diam(e)
+Fig. 4 The contribution of the different forces acting alone in the ω, Ω plane for semi-major axis a = RGEO. The initial eccentricity is 0.1 and the initial inclination 40◦. The colormap corresponds to the value of the eccentricity diameter over 120 years.
+the typical satellites with A/m = 0.012 m2/kg (top row), the eccentricity variations are of the order 10−3 for orbits with initial inclinations up to about 40◦ and then they abruptly increase to reach up to re-entry values. At an initial inclination of about 75◦ almost all the orbits are re-entering except for two symmetric values of the argument of the perigee for each node, which represent frozen orbits configurations. A similar behaviour with respect to the inclination increase is obtained also for the high A/m satellites (bottom row). Namely, the abrupt increase is observed passing from J2 and solar radiation pressure dominated regime at low inclinations to a third body dynamics dominated regime past the 40◦ of inclination.
+
+
+12 Ioannis Gkolias, Camilla Colombo
+0
+60
+120
+180
+240
+300
+360
+0 60 120 180 240 300 360
+ω (◦)
+Ω (◦)
+a = RGEO, e = 0.001, i = 0◦, A/m = 0.012 m2
+kg
+0.001
+0.00105
+0.0011
+0.00115
+0.0012
+0.00125
+0.0013
+0
+60
+120
+180
+240
+300
+360
+0 60 120 180 240 300 360
+ω (◦)
+Ω (◦)
+a = RGEO, e = 0.001, i = 45◦, A/m = 0.012 m2
+kg
+0
+0.05
+0.1
+0.15
+0.2
+0.25
+0.3
+0
+60
+120
+180
+240
+300
+360
+0 60 120 180 240 300 360
+ω (◦)
+Ω (◦)
+a = RGEO, e = 0.001, i = 75◦, A/m = 0.012 m2
+kg
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+0
+60
+120
+180
+240
+300
+360
+0 60 120 180 240 300 360
+ω (◦)
+Ω (◦)
+a = RGEO, e = 0.001, i = 0◦, A/m = 1.0 m2
+kg
+0.021
+0.0215
+0.022
+0.0225
+0.023
+0.0235
+0.024
+0
+60
+120
+180
+240
+300
+360
+0 60 120 180 240 300 360
+ω (◦)
+Ω (◦)
+a = RGEO, e = 0.001, i = 45◦, A/m = 1.0 m2
+kg
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0
+60
+120
+180
+240
+300
+360
+0 60 120 180 240 300 360
+ω (◦)
+Ω (◦)
+a = RGEO, e = 0.001, i = 75◦, A/m = 1.0 m2
+kg
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+Fig. 5 Dynamical maps on the (Ω, ω) plane at geosynchronous semi-major axis a = RGEO
+and for a low initial eccentricity e = 0.001. The inclination is 0.1◦ in the left column, 45◦ in the middle column and 75◦ in the right column. The Area-to-mass ratio is 0.012 m2/kg in the top row and 1.0 m2/kg in the bottom row. The colormap corresponds to the value of the eccentricity diameter over 120 years.
+Notice that there exist significant differences between the low and high A/m cases, showcasing the importance of its contribution for low-eccentricity orbits. More specifically, at low-inclination the increased A/m forces only two stable configurations, those for ω +Ω −λsun = 0 or π at a geosynchronous altitude, where λsun is the ecliptic longitude of the Sun. For moderate inclinations, we observe that the solar radiation pressure seems to enhance the instability domain induced by the lunisolar perturbations, but this is not always the case (see also Sec. 4.2). Finally, for the 75◦ inclination, due to the solar-radiation pressure, the stable perigee configurations do not exist any more and have been replaced by two stable nodal configuration for each perigee.
+It is interesting now to examine the case of a higher initial eccentricity e = 0.2. In the panels presented in Fig. 6, in the same fashion as in Fig. 5, the different columns correspond to increasing values of the initial inclination (left to right) and the different rows to increasing values of the A/m (top to bottom). The behaviour with respect to the inclination increase is similar to the low-eccentricity case, i.e. as soon as the inclination exceeds the 40◦ the orbits exhibits large eccentricity growth due to third body perturbations. On the other hand, in this case the effect of the solar-radiation pressure seems to be less profound. Indeed, except for the slightly enhanced eccentricity variations in the low-inclination case, there do not seem to appear any other significant differences between the lower and the upper row maps.
+
+
+Towards a sustainable GEO 13
+0
+60
+120
+180
+240
+300
+360
+0 60 120 180 240 300 360
+ω (◦)
+Ω (◦)
+a = RGEO, e = 0.2, i = 0◦, A/m = 0.012 m2
+kg
+0.0225
+0.023
+0.0235
+0.024
+0.0245
+0.025
+0.0255
+0.026
+0.0265
+0.027
+0.0275
+0
+60
+120
+180
+240
+300
+360
+0 60 120 180 240 300 360
+ω (◦)
+Ω (◦)
+a = RGEO, e = 0.2, i = 45◦, A/m = 0.012 m2
+kg
+0.05
+0.1
+0.15
+0.2
+0.25
+0.3
+0.35
+0.4
+0.45
+0.5
+0.55
+0.6
+0
+60
+120
+180
+240
+300
+360
+0 60 120 180 240 300 360
+ω (◦)
+Ω (◦)
+a = RGEO, e = 0.2, i = 75◦, A/m = 0.012 m2
+kg
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+0
+60
+120
+180
+240
+300
+360
+0 60 120 180 240 300 360
+ω (◦)
+Ω (◦)
+a = RGEO, e = 0.2, i = 0◦, A/m = 1.0 m2
+kg
+0.041
+0.042
+0.043
+0.044
+0.045
+0.046
+0.047
+0.048
+0
+60
+120
+180
+240
+300
+360
+0 60 120 180 240 300 360
+ω (◦)
+Ω (◦)
+a = RGEO, e = 0.2, i = 45◦, A/m = 1.0 m2
+kg
+0.05
+0.1
+0.15
+0.2
+0.25
+0.3
+0.35
+0.4
+0.45
+0.5
+0.55
+0.6
+0
+60
+120
+180
+240
+300
+360
+0 60 120 180 240 300 360
+ω (◦)
+Ω (◦)
+a = RGEO, e = 0.2, i = 75◦, A/m = 1.0 m2
+kg
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+Fig. 6 Dynamical maps on the (Ω, ω) plane at geosynchronous semi-major axis a = RGEO
+and for a low initial eccentricity e = 0.2. The inclination is 0.1◦ in the left column, 45◦ in the middle column and 75◦ in the right column. The Area-to-mass ratio is 0.012 m2/kg in the top row and 1.0 m2/kg in the bottom row. The colormap corresponds to the value of the eccentricity diameter over 120 years.
+From the dynamical maps presented here, one can deduce that for equatorial GEO satellites graveyard disposal is the only option. In our disposal mapping it is easy to identify the lowest perigee variation corridors (dark blue lines in left panels in Figs 5 and 6). This set of orbits should be targeted with post mission disposal manoeuvres, although this is not enough for a long-term safe graveyard. An adequate spacing between the disposed satellites should be ensured, such that the collision probability becomes minimal. On the other hand, for inclinations higher than about 40◦ there exist an abundance of reentering solutions. The angle dependence of the position of unstable structures is not trivial at all, and poses interesting problems in re-entry disposal design which we will discuss in Sec. 4. Another interesting aspect that we would like to highlight, is the effect of the higher A/m ratio in the low-eccentricity region. This is connected with the existence of a stable equilibrium of the solar-radiation pressure force at low eccentricities. On the other hand, for high initial eccentricities and inclinations, the evolution in the two A/m cases is almost identical.
+3.3 Eccentricity-inclination maps
+Although the complex dependence on the initial angles has already been discussed, here we attempt a global characterisation of the geosynchronous orbital
+
+
+14 Ioannis Gkolias, Camilla Colombo
+0
+60
+120
+180
+240
+300
+360
+0 60 120 180 240 300 360
+ω (◦)
+Ω (◦)
+0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1
+∆e
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0 10 20 30 40 50 60 70 80 90
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0 10 20 30 40 50 60 70 80 90
+eccentricity
+inclination (◦)
+Ω = 339◦
+ω = 87◦
+eccentricity
+inclination (◦)
+Ω = 56◦
+ω = 216◦
+Fig. 7 Dynamical maps on the eccentricity - inclination plane at geosynchronous semimajor axis. Two sets of initial angular configurations are presented: in the left panel (Ω = 339◦, ω = 87◦) and in the right panel (Ω = 56◦, ω = 216◦). The colormap corresponds to the value of the normalised eccentricity diameter ∆e. The Area-to-mass ration is 0.012 m2/kg in both panels.
+region. We study the action-like variable space (a, e, i) and we address the angles dependence in a statistical manner, like in [26]. The semi-major axis is considered fixed and equal to the geosynchronous value for this mapping, since the same investigation for even up to 1000 km above or below RGEO yields very similar results. First, we present a set of maps for a fixed set of angles and then proceed with an angles-averaged dynamical mapping, i.e. for each point in the action-like variable space (a, e, i) we randomly select a sufficient sample of angular configurations (Ω, ω) and average the normalised eccentricity diameters over all the angles dataset. In Fig. 7 the eccentricity-inclination study for a = RGEO and two different angular configurations is presented. From disposal design point of view, a general feature of those maps that we should pay attention to is the generalised instability appearing at higher inclinations. And not only that, embedded in the unstable domain there exist particular configurations for which the eccentricity variations are small. Those regions of the phase space present some intriguing scenarios from future GEO exploitation, since they provide a stable operational regime next to an unstable region which could be used for end-of-life disposal (see for example the blue curves at 50 − 60◦ inclination in Fig. 7). As a last step, we present in Fig. 8 the angles-averaged dynamics over the eccentricity-inclination maps. In those maps, each point of the action-like space is sampled with 50 randomly selected angular configurations and the value of the dynamical indicator ∆e is averaged over all the angles. The result is a global dynamical map of the geosynchronous region, where the stable and
+
+
+Towards a sustainable GEO 15
+0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1
+angles-averaged ∆e
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0 10 20 30 40 50 60 70 80 90
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0 10 20 30 40 50 60 70 80 90
+eccentricity
+inclination (◦)
+a = RGEO
+A/m = 0.012 m2
+kg
+eccentricity
+inclination (◦)
+a = RGEO
+A/m = 1.0 m2
+kg
+Fig. 8 Dynamical maps on the eccentricity - inclination plane at GEO semi-major axis. The colormap corresponds to the value of the angles-averaged ∆e over 50 randomly selected ω − Ω configurations. In the left panel the Area-to-mass ratio is 0.012 m2/kg and in the right panel 1.0 m2/kg.
+unstable regions are clearly separated, albeit the information for the initial angle dependencies is lost. The region of above 40 − 45◦ inclination presents a richness of re-entry solutions. Of particular interest is also the region from 65 − 75◦ inclination where almost every orbit is re-entering within 120 years. The effect of the higher A/m (right panel) is almost negligible at higher eccentricities in the angles-averaged map. However, it creates some angle-related differences at low eccentricities. The results of the angles-averaged study, convincingly confirm the natural separation of the phase space between low-inclined (below ∼ 40◦) and high-inclined (above ∼ 40◦) orbits. Namely, for low-inclined orbits, there is a natural deficiency of eccentricity growth orbits, and the search for stable graveyard solution is the only possible post mission design plan. However, at higher inclination another opportunity presents itself, an abundance of re-entering orbits exists. The global map indicates that for Earth satellites at geosynchronous altitude, the third body perturbations are prevailing over the other perturbations leading to large eccentricity variations for inclined orbits. The characteristics of those orbital highways and possible exploitation scenarios are discussed in the following Section.
+4 Post-mission disposal issues
+The findings of Sec. 3 are further discussed here, considering also issues related to post-mission disposal planning. We have already mentioned the abundance
+
+
+16 Ioannis Gkolias, Camilla Colombo
+41900
+41950
+42000
+42050
+42100
+42150
+42200
+42250
+42300
+0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
+semi-major axis
+time (years)
+eccentricity
+time (years)
+high- delity
+single-averaged
+inclination (◦)
+time (years)
+Fig. 9 Orbital evolution of an inclined GEO orbit (a = RGEO, e = 0.3, i = 63◦, Ω = 240.0◦,
+ω = 0.0◦, M = 0.0◦ A/m = 0.012 m2/kg and initial epoch 21/06/2020 at at 06:43:12.0) re-entering within 15 years of simulation. The existence of this type of trajectory is also confirmed through a high-fidelity simulation of the same initial condition.
+of highly-inclined orbits that have a considerable eccentricity growth within the 120-year time-span of our propagation. However, there is another crucial dynamical information that is hidden in the discussion of the previous paragraph, that being the orbital lifetime of each orbit. Of special interest are short-lived solutions that naturally re-enter the atmosphere. Examples of short-lived orbits are presented and their properties are discussed. Moreover, we present an interesting case where, even though an increased A/m usually enhances the de-orbiting process, not only this does not happen, but in fact the solar-radiation pressure effect cancels the real eccentricity growth mechanism. Finally, in the light of the dynamical mapping results, the current guidelines are discussed, and alternative ways of GEO exploitation are proposed.
+4.1 An effective cleansing mechanism
+In Sec. 3 we have encountered some orbits with exceptional short life-time. A typical example of this type of orbits is shown in Fig. 9, where the evolution of a trajectory with initial condition a = RGEO, e = 0.3, i = 63◦, Ω = 240.0◦, ω = 0.0◦, M = 0.0◦ and A/m = 0.012 m2/kg is presented. The interesting feature is its orbital lifetime, which is less than 15 years. To exclude the chance that this is an outcome of the truncated force model or the single-averaged formulation, the same initial condition was also propagated under the highfidelity dynamics. The orbital evolution of two orbits coincides, suggesting that there is a quite effective cleansing mechanism at GEO altitude, that can make satellites re-enter even within the 25-year rule that is imposed for LEO orbits [30]. Moreover, the collision probability of an orbit like this is really minimal; for the solution shown in Fig. 9 the total time spend in the LEO protected region7 as well as the dwell time in the GEO protected region is just a few days.
+7 The LEO protected region is defined as the spherical shell between Earth’s surface and up to 2000 km altitude.
+
+
+Towards a sustainable GEO 17
+0
+60
+120
+180
+240
+300
+360
+0 60 120 180 240 300 360
+ω (◦)
+Ω (◦)
+0 20 40 60 80 100 120
+lifetime (years)
+0
+60
+120
+180
+240
+300
+360
+0 60 120 180 240 300 360
+0
+60
+120
+180
+240
+300
+360
+0 60 120 180 240 300 360
+0
+60
+120
+180
+240
+300
+360
+0 60 120 180 240 300 360
+0
+60
+120
+180
+240
+300
+360
+0 60 120 180 240 300 360
+ω (◦)
+Ω (◦)
+e = 0.01
+ω (◦)
+Ω (◦)
+e = 0.1
+ω (◦)
+Ω (◦)
+e = 0.2
+ω (◦)
+Ω (◦)
+e = 0.3
+Fig. 10 The (Ω, ω) orbital lifetime maps for orbits at a = RGEO , 63◦ inclination and eccentricities: a) e = 0.01 (top left), b) e = 0.1 (top right) c) e = 0.2 (bottom left) and d) e = 0.3 (bottom right).
+Fast re-entering orbits were also reported in the literature [55, 33] for high initial eccentricities and inclinations at geosynchronous altitude. Therefore, we would like to further explore under which conditions those orbits appear and study their properties. In Fig. 10 a set of disposal maps for 63◦ inclination is presented, however, the colormap here does not correspond to the eccentricity diameter but rather to the orbital lifetime. The results are shown for four different values of the initial eccentricity e = 0.01, e = 0.1, e = 0.2, e = 0.3. For values of the eccentricity higher than 0.1 there exists, around an initial right ascension of the ascending node of Ω = 230◦, a set of orbits with very promising lifetimes of 20 − 30 years.
+
+
+18 Ioannis Gkolias, Camilla Colombo
+0
+60
+120
+180
+240
+300
+360
+0 60 120 180 240 300 360
+ω (◦)
+Ω (◦)
+0 20 40 60 80 100 120
+lifetime (years)
+0
+60
+120
+180
+240
+300
+360
+0 60 120 180 240 300 360
+0
+60
+120
+180
+240
+300
+360
+0 60 120 180 240 300 360
+0
+60
+120
+180
+240
+300
+360
+0 60 120 180 240 300 360
+0
+60
+120
+180
+240
+300
+360
+0 60 120 180 240 300 360
+ω (◦)
+Ω (◦)
+i = 50◦
+ω (◦)
+Ω (◦)
+i = 60◦
+ω (◦)
+Ω (◦)
+i = 70◦
+ω (◦)
+Ω (◦)
+i = 80◦
+Fig. 11 The Ω, ω orbital lifetime maps for orbits at a = RGEO , eccentricity e = 0.2 and
+inclinations: a) i = 50◦ (top left), b) i = 60◦ (top right) c) i = 70◦ (bottom left) and d) i = 80◦ (bottom right).
+Moreover, this set of orbits is not a local characteristic that happens only for the 63◦ of inclination. Fig. 11 shows the lifetime disposal maps for initial eccentricity e = 0.2 and different values of the initial inclination. The fast re-entry patches exist in a range of initial inclinations from 50 − 90◦. However, their structure and their position with respect the initial value of the satellites node changes with varying inclination, due to the varying orientation of the perigee and node with respect to the perturbers’ planes [37].
+It is interesting now to understand the mechanism that leads those orbits to re-enter within 20-30 years. In order to further study this effect we select a set of orbits for i = 63◦, e = 0.2, ω = 60◦ and values of the node Ω equally spaced every 10◦. The eccentricity evolution of this set of orbits is presented in
+
+
+Towards a sustainable GEO 19
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+0 20 40 60 80 100 120
+eccentricity
+time (years)
+−0.8
+−0.6
+−0.4
+−0.2
+0
+0.2
+0.4
+0.6
+0.8
+−0.8 −0.6 −0.4 −0.2 0 0.2 0.4 0.6 0.8
+e sin(ω)
+e cos(ω)
+Fig. 12 In the left panel: the eccentricity evolution of a set of 36 orbits with same initial conditions except for the right ascension of the ascending node, which is sampled every 10◦. In the right panel: the evolution of the same orbits in the (e cos ω, e sin ω) plane. Those with node between Ω = 190◦ and 260◦ have re-entry times of about 20 years (red lines).
+the left panel of the Fig. 12. The fast re-entering orbits are those with nodes between Ω = 190◦ and 260◦ (red bold lines). This effect is even more clear if we look at the evolution of the eccentricity vector in the orbital plane through the set of variables e cos ω, e sin ω. It is now clear, that the evolution is following a Lidov-Kozai type of evolution, induced by the combined contribution of the Sun and the Moon. The interesting orbits, with fast re-entry times, are just those for which the eccentricity evolution allows them to reach the re-entry value within the first quarter of the dynamical evolution cycle. A suitable analytical method to check for the existence and a-priori locate their position is currently under development [27]. The insight developed from the study of the triple averaged Hamiltonian model suggests that, the in-plane dynamics for a range of inclinations with respect to the ecliptic become such, that the maximum eccentricity acquired during the Lidov-Kozai type of dynamics is equal to or larger the atmospheric re-entry value. Those initial conditions correspond to various sets of equatorial inclinations and node combinations, and could produce the complicated patterns that we see in the disposal maps in Fig 10 and 11.
+4.2 Solar-radiation pressure implications
+In Sec. 3 we concluded that the effect of the solar radiation pressure can be important for low-eccentricity orbits. Moreover, usually during a lunisolar driven re-entry, an enhanced solar radiation pressure would promote the deorbit process, as it has been observed for the transition region between LEO and MEO [50]. However, this is not always the case, especially for the inclined geosynchronous orbits where the the Lidov-Kozai type dynamics are driving the re-entry. More specifically, by further inspecting both the disposal maps for loweccentricity and high-inclination and the eccentricity-inclination action maps,
+
+
+20 Ioannis Gkolias, Camilla Colombo
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+0 20 40 60 80 100 120
+eccentricity
+time (years)
+A/m = 0.012 m2/kg
+A/m = 1.0 m2/kg
+0
+0.2
+0.4
+0.6
+0.8
+0 0.2 0.4 0.6 0.8
+e sin(ω)
+e cos(ω)
+A/m = 1.0 m2/kg
+A/m = 0.012 m2/kg
+Fig. 13 The eccentricity evolution of two inclined geosynchronous orbits with same initial conditions but different values of the A/m ratio. In the left panel, the orbit evolution for a standard spacecraft A/m = 0.012 m2/kg is presented, whereas in the right panel, the orbit evolution for a spacecraft equipped with an area-augmenting device A/m = 1.0 m2/kg is shown.
+0 0.2 0.4 0.6 0.8 1
+55 60 65 70 75 80 85
+0
+90
+180
+270
+360
+0 0.2 0.4 0.6 0.8 1
+55 60 65 70 75 80 85
+0
+90
+180
+270
+360
+e
+i (◦)
+φSRP (◦)
+e
+i (◦)
+φSRP (◦)
+Fig. 14 The 3-dimensional evolution of the orbits in Fig. 13 in the e, i , φSRP space.
+In the left panel, the orbit evolution for a standard spacecraft A/m = 0.012 m2/kg is presented, whereas in the right panel, the orbit evolution for a spacecraft equipped with an area-augmenting device A/m = 1.0 m2/kg is shown.
+we encountered cases where opening a solar sail would considerably delay the de-orbit process. An example of this type of interaction is given in Fig.13. The low A/m orbit (blue curve) is re-entering within about 60 years of evolution, while the high A/m orbit (red curve) has almost double the lifetime. In an attempt to understand the delayed re-entry, we plot again the evolution in the orbital plane using the e cos ω, e sin ω variable for the two orbits. Immediately we recognise that the low A/m orbit directly follows a Lidov-Kozai type evolution. On the other hand, the high A/m orbit is trapped about the origin for a long time span, until it finally escapes and follows again a third-body dynamics dominated trajectory.
+
+
+Towards a sustainable GEO 21
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0 10 20 30 40 50 60 70 80 90
+eccentricity
+inclination (◦)
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+1
+angles-averaged ∆e
+a = RGEO
+A/m = 0.012 m2
+kg
+15000
+20000
+25000
+30000
+35000
+40000
+52000 53000 54000 55000 56000 57000 58000
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+52000 53000 54000 55000 56000 57000 58000
+40
+45
+50
+55
+60
+65
+70
+75
+80
+52000 53000 54000 55000 56000 57000 58000
+semi-major axis (km)
+MJD (days)
+SIRIUS-1
+SIRIUS-2
+SIRIUS-3
+eccentricity
+MJD (days)
+SIRIUS-1
+SIRIUS-2
+SIRIUS-3
+inclination (◦)
+MJD (days)
+SIRIUS-1
+SIRIUS-2
+SIRIUS-3
+Fig. 15 The angles-averaged stability map of the geosynchronous area with the current population superposed. All operations up to now have been heavily concentrated in the region of the phase space where good re-entry opportunities do not exist.
+This dynamical interaction is further explained in Fig.14 where we identify the main cause of the low-eccentricity trapping to be nothing else than the stable equilibrium of the solar radiation pressure resonance for the high A/m case. Namely, by defining the resonant angle for the solar radiation pressure as φSRP = Ω + ω − λsun, the evolution of the two orbits with respect to their eccentricity, inclination and φSRP is presented. For the low A/m case, φSRP is always rotating and the dynamics are following the eccentricity-inclination evolution dictated mainly by the third-body perturbations. On the contrary, in the evolution for the high A/m case, φSRP is initially rotating but with the decrease in the inclination it is trapped into the resonance and is forced to librate about the stable equilibrium. The induced frequency in the argument of the perigee evolution, temporarily suppresses the Lidov-Kozai effect and the eccentricity stays bounded to low values. The further decrease of the inclination, finally drives the orbit out of the solar-radiation pressure resonance and it follows once again the Lidov-Kozai type of dynamics as we have also seen in Fig. 13.
+4.3 Population, dynamics and guidelines
+Currently, space operations in GEO are heavily concentrated in the loweccentricity, low-inclination region. This is evident in the right panel of Fig. 15 where the real population is superposed to the angles-averaged eccentricityinclination map. In this regime, mission planning and operations are well established, however there is not an efficient re-entry mechanism for inclinations lower than 40◦ inclination. Hence, it is inevitable that the population of the space debris in the region will keep increasing.
+
+
+22 Ioannis Gkolias, Camilla Colombo
+On the other hand, carefully selected highly-inclined geosynchronous orbits can re-enter in time-scales comparable to the 25-years, which is the current IADC guideline for the LEO region. One could argue that inclined geosynchronous orbits are not as useful as the equatorial ones, but it has been shown that small constellations of a few eccentric and inclined geosynchronous satellites could reproduce the same coverage as a geostationary satellite [10]. This kind of exploitation has been already implemented successfully with the Sirius constellation. Sirius-1, 2 and 3 were operating in eccentric and inclined geosynchronous orbits for several years providing satellite radio services in North America. Unfortunately, at the end of the operational lifetime of the constellation, the operators following the current guidelines removed the three satellites from the GEO region, by reducing the semi-major axis by almost 10000 km and circularising the orbits. In the right panel of Fig. 15 the time evolution of the publicly available two-line elements (TLE) of three constellation components are shown and the end-of-life manoeuvres are highlighted in yellow. Nonetheless, the constellation was operating in an orbital region were fast re-entering orbits existed. We believe that considering re-entry as an alternative disposal solution, should not only be included as option in the guidelines for inclined satellites but also should be promoted. In this sense, the Sirius constellation was a missed opportunity to showcase a long-term sustainable exploitation of the geosynchronous region. Another interesting idea to be explored in future geosynchronous mission design concepts is certainly the interplay between the solar radiation pressure and lunisolar perturbations. As we have seen in Sec. 4.2, using an area augmenting device can suppress the Lidov-Kozai effect and provide some low eccentricity variation operational orbits. A mission that uses the solar radiation trapping to stabilise and proceed to retract the area augmenting device at the end of the operations, could also lead to an atmospheric re-entry of the defunct satellite in a reasonable time frame.
+5 Conclusions
+The GEO orbital region was historically and is foreseen to be, one of the most precious assets in space exploitation. As it should be the norm with all natural resources available to humankind, the geosynchronous orbital region should also be treated in a sustainable way. Unfortunately, current practises in the region do not definitely ensure this. In this work, a detailed dynamical cartography of the geosynchronous orbital region was performed to identify interesting possibilities in post-mission disposal strategies. Some of the key findings from the eccentricity variation maps in GEO are: 1) the positioning of the satellite only with respect to the geosynchronous resonance does not create interesting re-entry scenarios, 2) solar radiation pressure is important in the evolution of low-eccentricity lowinclination orbits, 3) for highly eccentric and inclined orbits the third-body perturbations dominate the dynamics, 4) there is a clear separation in the
+
+
+Towards a sustainable GEO 23
+long-term evolution of low- and high-inclined orbits, implying that at geosynchronous altitude the Lidov-Kozai type of dynamics are prevailing. Moving towards a sustainable GEO environment, mission design and planning should focus on exploiting fast re-entering orbits. Those are associated with particular geometries with respect to the Sun and Moon and they could be analytically located and introduced in the trajectory design process. Of course, this would require a whole re-assessment of the operations in the region. However, satellites in eccentric and inclined orbits could provide similar services to equatorial ones, but with the benefit that could achieve atmospheric re-entry at the end-of-life. Designing autonomous-navigation and propulsion systems to reach and follow those pathways is also a technological challenge but is well within the capabilities of future astrodynamical applications. One of the first steps that we need to take in this direction, is to redesign the guidelines for decommissioning GEO satellites. In fact, the opportunity to apply this kind of re-entering strategies was presented in the past with the Sirius constellation. Unfortunately, the operators decided to follow the current regulations and re-orbited the satellites. What could have been a pioneer example of a clean exploitation of GEO is not enforced by current guidelines. Moreover, given the dynamical complexities in the region, even the graveyard selection for low inclinations cannot be efficiently reduced to a single equation rule. Specialised tools that exploit the dynamical mapping of the region and sophisticated optimization algorithms should be used to provide the best-case disposal for each individual of post-mission disposal scenario. Considering the surrounding population in order to minimize collision probabilities of a given graveyard orbit should be also part of the disposal design process.
+Acknowledgements The research leading to these results has received funding from the Horizon 2020 Program of the European Union’s Framework Programme for Research and Innovation (H2020-PROTEC-2015) under REA grant agreement number 687500 – ReDSHIFT. The authors would like to thank Martin Lara, Alessandro Rossi, Kleomenis Tsiganis, Elisa Maria Alessi, Despoina Skoulidou, and Aaron Rosengren for useful discussions and suggestions. The authors acknowledge the use of the Milkyway High Performance Computing Facility, and associated support services at the Department of Aerospace Science and Technology in Politecnico di Milano. The datasets generated for this study can be found in the repository at the link http://redshift-h2020.eu/. We thank the anonymous reviewers for the useful comments.
+Appendix A: Semi-analytical modeling of geosynchronous orbits
+The single-averaged theory for Earth’s satellites has been extensively studied and presented in the literature. In Particular the dynamical system adopted in PlanODyn is presented and validated in [15,16]. Here we report the equations necessary to reproduce the calculations discussed in the present manuscript. In the following formulas μ⊕ is the gravitational parameter of the Earth, R⊕ is the equatorial mean radius of the Earth and (a, e, i, Ω, ω, M ) the classical orbital elements of the satellite.
+
+
+24 Ioannis Gkolias, Camilla Colombo
+Geopotential
+The perturbing function can be obtained in orbital elements through the classical Kaula expansion [36]:
+RJlm = μ⊕Rl⊕
+al+1
+l
+∑
+p=0
+Flmp(i)
+∞
+∑
+q=−∞
+Glpq(e)Slmpq(ω, M, Ω, θg)
+where
+Slmpq =
+[ Clm −Slm
+]l−m even
+l−m odd
+cos ((l − 2p)ω + (l − 2p + q)M + (Ω − θg))
++
+[ Slm
+Clm
+]l−m even
+l−m odd
+sin ((l − 2p)ω + (l − 2p + q)M + (Ω − θg)) .
+In the above expressions (l, m, p, q) are integers, Flmp(i), Glpq)(e) are the Kaula F and G functions [36], Clm,Slm the non-normalised spherical harmonics coefficients of Earth’s gravitational field and θg the Greenwich hour angle. In the cases where the function Glmn is not a closed form function of e, it is expressed as a series up to O(e20) for the needs of this work.
+Zonal harmonics
+For the secular effect of the zonal harmonics Jl0 = Jl we take into account the first-order averaged perturbations with respect to J2, J3 and J4 as well as the second-order with respect to J2 (J22) [44]:
+R ̄ zonal = R ̄ J2 + R ̄ J2
+2 + R ̄ J3 + R ̄ J4 .
+To isolate the secular terms in Kaula’s expansion it suffices to select the terms in RJl for which M is not present i.e. l − 2p + q = 0 :
+R ̄J2 = R2⊕J2μ⊕(3 cos(2i) + 1)
+8a3 (1 − e2)3/2
+R ̄J3 = 3R3⊕eJ3μ⊕ sin(i)(5 cos(2i) + 3) sin(ω)
+16a4 (1 − e2)5/2
+R ̄ J4 = − 3R4⊕J4μ⊕
+128a5 (1 − e2)7/2
+[
+− 35 sin4(i) (2e2 cos(2ω) − 3e2 − 2)
++ 20 sin2(i) (3e2 cos(2ω) − 6e2 − 4) + 8 (3e2 + 2)
+]
+
+
+Towards a sustainable GEO 25
+The second order averaged solution for J2 (J22) can be retrieved from Brouwer’s closed form theory [9]:
+R ̄ J2
+2 = 3R4⊕J22μ⊕
+128a5 (1 − e2)7/2
+[
+cos4(i)
+(
+30e2 cos(2ω) − 5e2 + 36√1 − e2 + 40
+)
+− 2 cos2(i)
+(
+16e2 cos(2ω) − 9e2 + 12√1 − e2 + 4
+)
++ 2e2 cos(2ω) − 5e2 + 4√1 − e2
+]
+Resonant Tesseral harmonics
+The resonant tesseral harmonics for the GEO case are also obtained from Kaula’s expansion. Terms associated with J21 (i.e. C21 and S21) are omitted because their strength is considerably smaller. The resonant contribution due to tesseral harmonics yields:
+Rres
+tesseral = Rres
+J22 + Rres
+J31 + Rres
+J32 + Rres
+J33 + Rres
+J41 + Rres
+J42 + Rres
+J43 + Rres
+J44
+where for each harmonic only terms satisfying the condition
+(l − 2p)ω ̇ + (l − 2p + q)M ̇ + m(Ω ̇ − θ ̇g) ≈ 0
+are selected. The resonant condition for satellites at geosynchronous altitude yields:
+l − 2p + q = m, with m = 1, 2, 3, 4 . . . .
+Introducing the astronomical longitude as
+λ = ω + Ω + M − θg
+the resonant contributions read:
+Rres
+J22 = R2⊕μ⊕
+a3
+(
+C22F220G200 cos(2λ) + S22F220G200 sin(2λ)
++C22F221G212 cos(2(λ − ω)) + S22F221G212 sin(2(λ − ω))
++C22F222G224 cos(2(λ − 2ω)) + S22F222G224 sin(2(λ − 2ω))
+)
+Rres
+J31 = R3⊕μ⊕
+a4
+(
+C31F310G30−2 cos(λ + 2ω) + C31F312G322 cos(λ − 2ω)
++ C31F313G334 cos(λ − 4ω) + C31F311G310 cos(λ) + S31F310G30−2 sin(λ + 2ω) + S31F313G334 sin(λ − 4ω)
++ S31F312G322 sin(λ − 2ω) + S31F311G310 sin(λ)
+)
+
+
+26 Ioannis Gkolias, Camilla Colombo
+Rres
+J32 = R3⊕μ⊕
+a4
+(
+C32F320G30−1 sin(2λ + ω) + C32F322G323 sin(2λ − 3ω)
++ C32F321G311 sin(2λ − ω) − S32F320G30−1 cos(2λ + ω)
+− S32F321G311 cos(2λ − ω) − S32F322G323 cos(2λ − 3ω)
+)
+Rres
+J33 = R3⊕μ⊕
+a4
+(
+C33F331G312 cos(3λ − 2ω) + C33F332G324 cos(3λ − 4ω)
++ C33F330G300 cos(3λ) + S33F332G324 sin(3λ − 4ω)
++ S33F331G312 sin(3λ − 2ω) + S33F330G300 sin(3λ)
+)
+Rres
+J41 = R4⊕μ⊕
+a5
+(
+C41F410G40−3 sin(λ + 3ω) + C41F413G433 sin(λ − 3ω)
++ C41F412G421 sin(λ − ω) + C41F411G41−1 sin(λ + ω) − S41F410G40−3 cos(λ + 3ω) − S41F411G41−1 cos(λ + ω)
+− S41F412G421 cos(λ − ω) − S41F413G433 cos(λ − 3ω)
+)
+Rres
+J42 = R4⊕μ⊕
+a5
+(
+C42F420G40−2 cos(2(λ + ω)) + C42F422G422 cos(2(λ − ω))
++ C42F423G434 cos(2(λ − 2ω)) + C42F421G410 cos(2λ) + S42F420G40−2 sin(2(λ + ω)) + S42F423G434 sin(2(λ − 2ω))
++ S42F422G422 sin(2(λ − ω)) + S42F421G410 sin(2λ)
+)
+Rres
+J43 = R4⊕μ⊕
+a5
+(
+C43F430G40−1 sin(3λ + ω) + C43F432G423 sin(3(λ − ω))
++ C43F431G411 sin(3λ − ω) − S43F430G40−1 cos(3λ + ω)
+− S43F431G411 cos(3λ − ω) − S43F432G423 cos(3(λ − ω))
+)
+Rres
+J44 = R4⊕μ⊕
+a5
+(
+C44F441G412 cos(4λ − 2ω) + C44F442G424 cos(4(λ − ω))
++ C44F440G400 cos(4λ) + S44F441G412 sin(4λ − 2ω)
++ S44F442G424 sin(4(λ − ω)) + S44F440G400 sin(4λ)
+)
+
+
+Towards a sustainable GEO 27
+Third body perturbations
+The third-body potential implemented in PlanODyn is expanded in powers of the parallactic factor (a/rb) as in [34, 15], where rb is the geocentric distance of the perturber. Terms up to the fourth order (P2, P3, P4) in the expansion are retained for both the Sun and the Moon.
+R ̄ 3body = R ̄ P2$ + R ̄ P3$ + R ̄ P4$ + R ̄ P2 + R ̄ P3 + R ̄ P4
+The perturbing functions are single-averaged in closed form over the satellite’s mean anomaly. This operation yields the following expressions for the disturbing functions [34, 15]:
+R ̄ P2b = a2μb
+r3
+b
+(
+3A2e2 + 3A2
+4 − 3B2e2
+4 + 3B2
+4 − 3e2
+4 −1
+2
+)
+R ̄ P3b = a3μb
+r4
+b
+(
+− 25
+4 A3e3 − 75A3e
+16 + 75
+16 AB2e3 − 75
+16 AB2e + 45Ae3
+16 + 15Ae
+4
+)
+R ̄ P4b = a4μb
+r5
+b
+( 105A4e4
+8 + 315A4e2
+16 + 105A4
+64 − 315
+16 A2B2e4 + 525
+32 A2B2e2
++ 105A2B2
+32 − 135A2e4
+16 − 615A2e2
+32 − 15A2
+8 + 105B4e4
+64 − 105B4e2
+32 + 105B4
+64 + 45B2e4
+32 + 15B2e2
+32 − 15B2
+8 + 45e4
+64 + 15e2
+8 +3
+8
+)
+where A and B are given from [34]:
+A = − xˆb cos(i) sin(ω) sin(Ω) + yˆb cos(i) sin(ω) cos(Ω) + zˆb sin(i) sin(ω) + xˆb cos(ω) cos(Ω) + yˆb cos(ω) sin(Ω) B = − xˆb cos(i) cos(ω) sin(Ω) + yˆb cos(i) cos(ω) cos(Ω) + zˆb sin(i) cos(ω) − xˆb sin(ω) cos(Ω) − yˆb sin(ω) sin(Ω)
+and rˆb = (xˆb, yˆb, zˆb) is the unit vector to the perturbing body.
+Solar radiation pressure
+The single-averaged contribution of the solar radiation pressure as implemented in PlanODyn is given from [35, 39]:
+R ̄ SRP = 3
+2 aePSRP CR
+A m
+(
+cos(ε) sin(λ ) cos(ω) sin(Ω)
++ cos(ε) cos(i) sin(λ ) sin(ω) cos(Ω) + sin(ε) sin(i) sin(λ ) sin(ω)
+− cos(i) cos(λ ) sin(ω) sin(Ω) + cos(λ ) cos(ω) cos(Ω)
+)
+,
+where λ is the ecliptic longitude of the Sun, PSRP is the solar radiation pressure per unit area at 1 AU, CR the satellite’s reflectivity coefficient and A/m its area-to-mass ratio.
+
+
+28 Ioannis Gkolias, Camilla Colombo
+Earth’s general precession
+The long-term contribution of Earth’s general precession is described in detail in Appendix B. The perturbing function yields:
+Rprec = √a (1 − e2) μ⊕(Px sin(i) sin(Ω) − Py sin(i) cos(Ω) + Pz cos(i))
+where P = (Px, Py, Pz) is the angular velocity of a precessing geocentric equatorial frame relative to an inertial (i.e. J2000).
+Equations of motion
+The complete long-term evolution at geosynchronous altitude is described by
+R ̄ GEO = R ̄ zonal + Rres
+tesseral + R ̄ 3body + R ̄ SRP + Rprec.
+The equations of motion in orbital elements are then derived via Lagrange’s planetary equations [7]:
+da
+dt = 2
+na
+∂R ̄ GEO ∂M
+de
+dt = 1
+na2e
+(
+(1 − e2) ∂R ̄ GEO
+∂M − √1 − e2 ∂R ̄GEO
+∂ω
+)
+di
+dt = 1
+na2 sin i√1 − e2
+(
+cos i ∂R ̄GEO
+∂ω − ∂R ̄ GEO
+∂Ω
+)
+dΩ
+dt = 1
+na2 sin i√1 − e2
+R ̄ GEO
+∂i
+dω
+dt = − 1
+na2 sin i√1 − e2 cos i R ̄GEO
+∂i +
+√1 − e2 na2e
+R ̄ GEO
+∂e dM
+dt = n − 1 − e2
+na2e
+∂R ̄ GEO
+∂e − 2
+na
+R ̄ GEO
+∂a .
+Appendix B: Semi-analytical modelling of Earth’s general precession
+One effect that is usually overlooked in analytical and semi-analytical propagations is the effect of Earth’s precession in the orbital evolution. Namely, for the Earth’s gravity field representation, the lunisolar contributions and solar radiation pressure, a mean equator and mean equinox of the day frame is usually considered (MOD). All the ephemerides are also computed in this frame. However, this frame is not inertial due to Earth’s precession. This effect is negligible for low and medium Earth orbits, but becomes important for GEO and higher-altitude satellites, especially for long-term propagations [29]. Particularly, it produces a long-term contribution to the inclination and right
+
+
+Towards a sustainable GEO 29
+9.95
+10
+10.05
+10.1
+10.15
+10.2
+0 20 40 60 80 100 120
+inclination (◦)
+time (years)
+high- delity
+semi-analytical with precession
+semi-analytical without precession
+Fig. 16 Time evolution of the inclination for an orbit at about GEO semi-major axis, showing the contribution of Earth’s precession on the evolution. The force model included only the J2 effect and the transformation from MOD to J2000 frames. The three lines corresponds to: a) a high-fidelity propagation (grey line), b) a semi-analytical with only J2 (blue line) and c) a semi-analytical that takes into account the Earth’s precession contribution on top of J2 (red line).
+ascension of the ascending node that we would like to include in our simulations. In the literature, there exist different methods to model this effect [38, 22, 29]. Here, an efficient and accurate way to model the Earth’s general precession effect is presented. The disturbing function for the Coriolis contribution in the non-inertial MOD frame is given by [28]:
+Rprec = √a (1 − e2) μ⊕ P · wˆ (3)
+where μ⊕ is the Earth’s gravitational parameter, a, e the satellite’s semi-major axis and eccentricity, wˆ is the unit vector, normal to the orbital plane, and P = (Px, Py, Pz) is the angular velocity vector of the non-inertial frame relative to an inertial one. In orbital elements the normal vector wˆ becomes:
+wˆ =
+
+
+sin i sin Ω − sin i cos Ω cos i
+
+ (4)
+where i and Ω are the satellite’s inclination and the right ascension of the ascending node. The disturbing function then reads
+Rprec = √a (1 − e2) μ⊕(Px sin(i) sin(Ω) − Py sin(i) cos(Ω) + Pz cos(i))
+
+
+30 Ioannis Gkolias, Camilla Colombo
+and its contribution to the classical orbital elements, is given by Lagrange planetary equations:
+( di dt
+)
+prec
+= −Px cos Ω − Pz sin Ω
+( dΩ dt
+)
+prec
+= Px cot i sin Ω − Py cos Ω cot i − Pz
+( dω dt
+)
+prec
+= cos i (Pz + Py cos Ω cot i − Px cot i sin Ω) ,
+(5)
+while the rest of the orbital elements (a, e, M ) are not directly affected. Keep in mind that the elements appearing in this formulation are non-osculating or contact elements. Since short-period terms do not appear in Eqs. 5 the equations of motion can be coupled with the rest of the single-averaged effects. However, one should pay attention when recovering the short-periodic terms of the mixed formulation [22]. To estimate the effect of the Earth’s precession, we need now to estimate the angular velocity vector P of the MOD frame with respect to an inertial frame, which we assume to be the one defined by the mean equator and mean equinox of the epoch J2000. The rotation matrix from the MOD to the J2000 inertial frame is given from
+RMOD→J2000 = Rz(ζ)Ry(−θ)Rz(z) (6)
+where Ry, Rz denote the clockwise rotation matrices with respect to the y and z axis respectively. The angles ζ, θ, z represent the general Earth’s precession, i.e. the combined effect of lunisolar attraction on Earth’s equatorial bulge and the change of Earth’s orbital plane due to planetary attractions, and are computed from Lieske’s theory [43]:
+ζ = 2306.2181 · T + 0.30188 · T 2 + 0.017988 · T 3
+θ = 2004.3109 · T − 0.42665 · T 2 − 0.041833 · T 3
+z = 2306.2181 · T + 1.09468 · T 2 + 0.018203 · T 3
+where T is the Julian time past the 01/01/2000 in centuries and the angles are given in arcseconds. Now it suffices to observe that the angular velocity tensor Π between the two frames is given by:
+Π=
+
+
+0 −Pz Py Pz 0 −Px −Py Px 0
+
+ = R ̇ MOD→J2000 · RT
+MOD→J2000 (7)
+where the R ̇ is the time derivative and RT is the transpose of R. Thus
+Px = θ ̇ sin ζ − z ̇ cos ζ sin θ
+Py = θ ̇ cos z + z ̇ sin θ sin ζ
+Pz = −z ̇ cos θ − ζ ̇
+
+
+Towards a sustainable GEO 31
+where the rates are given in arcseconds per century and
+ζ ̇ = 2306.2181 + 0.60376 · T + 0.053964 · T 2
+θ ̇ = 2004.3109 − 0.8533 · T − 0.125499 · T 2
+z ̇ = 2306.2181 + 2.18936 · T + 0.054609 · T 2.
+An illustrative example of this effect is given in Fig. 16, where the time evolution of the inclination for a hypothetical orbit at geosynchronous altitude for a time span of 120 years is presented. In order to make the Earth’s precession effect clearer, we further account only for the Earth’s oblateness (J2) contribution. Under the single-averaged J2 formulation (blue line), the mean inclination is constant. The same initial conditions are propagated also using a high-fidelity modelling (grey line), i.e. using a J2 force model in Cartesian coordinates and NASA’s SPICE tool-kit for the Earth’s rotation matrices. The evolution now significantly differs, and a non-negligible contribution of Earth’s general precession can be observed, producing an oscillation with an amplitude of about 8 seconds of a degree in the inclination evolution. However, this effect can be accurately included in the semi-analytical propagation, by adding the Earth’s precession contributions (Eq. 5) (red line).
+Compliances with ethical standards
+Conflict of Interest Statement On behalf of all authors, the corresponding author states that there is no conflict of interest.
+References
+1. Albuja, A.A., Scheeres, D.J., Cognion, R.L., Ryan, W., Ryan, E.V.: The YORP effect on the GOES 8 and GOES 10 satellites: A case study. Advances in Space Research 61, 122–144 (2018). DOI 10.1016/j.asr.2017.10.002 2. Alessi, E.M., Deleflie, F., Rosengren, A.J., Rossi, A., Valsecchi, G.B., Daquin, J., Merz, K.: A numerical investigation on the eccentricity growth of GNSS disposal orbits. Celestial Mechanics and Dynamical Astronomy 125(1), 71–90 (2016). DOI 10.1007/s10569-016-9673-4. URL https://doi.org/10.1007/s10569-016-9673-4
+3. Alessi, E.M., Schettino, G., Rossi, A., Valsecchi, G.B.: Natural highways for end-of-life solutions in the LEO region. Celestial Mechanics and Dynamical Astronomy 130, 34 (2018). DOI 10.1007/s10569-018-9822-z 4. Alessi, E.M., Schettino, G., Rossi, A., Valsecchi, G.B.: Solar radiation pressure resonances in Low Earth Orbits. Monthly Notices of the Royal Astronomical Society 473, 2407–2414 (2018). DOI 10.1093/mnras/stx2507 5. Armellin, R., San-Juan, J.F.: Optimal Earth’s reentry disposal of the Galileo constellation. Advances in Space Research 61, 1097–1120 (2018). DOI 10.1016/j.asr.2017.11.028 6. Armellin, R., San-Juan, J.F., Lara, M.: End-of-life disposal of high elliptical orbit missions: The case of integral. Advances in Space Research 56(3), 479 – 493 (2015). DOI https://doi.org/10.1016/j.asr.2015.03.020. URL http://www.sciencedirect.com/ science/article/pii/S0273117715002227. Advances in Asteroid and Space Debris Science and Technology - Part 1 7. Battin, R.H.: An Introduction to the Mathematics and Methods of Astrodynamics, revised edition. American Institute of Aeronautics and Astronautics (1999)
+
+
+32 Ioannis Gkolias, Camilla Colombo
+8. Breiter, S., Wytrzyszczak, I., Melendo, B.: Long-term predictability of orbits around the geosynchronous altitude. Advances in Space Research 35, 1313–1317 (2005). DOI 10.1016/j.asr.2005.02.033 9. Brouwer, D.: Solution of the problem of artificial satellite theory without drag. Astronomical Journal 64, 378 (1959). DOI 10.1086/107958 10. Bruno, M.J., Pernicka, H.J.: Tundra Constellation Design and Stationkeeping. Journal of Spacecraft and Rockets 42, 902–912 (2005). DOI 10.2514/1.7765 11. Celletti, A., Gales ̧, C.: On the Dynamics of Space Debris: 1:1 and 2:1 Resonances. Journal of NonLinear Science 24, 1231–1262 (2014). DOI 10.1007/s00332-014-9217-6 12. Celletti, A., Gale ̧s, C., Pucacco, G., Rosengren, A.J.: Analytical development of the lunisolar disturbing function and the critical inclination secular resonance. Celestial Mechanics and Dynamical Astronomy 127, 259–283 (2017). DOI 10.1007/ s10569-016-9726-8 13. Chao, C.C., Campbell, S.: Long-Term Perigee Height Variations of Geo Disposal Orbits: a Revisit. In: D. Danesy (ed.) 4th European Conference on Space Debris, ESA Special Publication, vol. 587, p. 303 (2005) 14. Chobotov, V.A.: Disposal of spacecraft at end of life in geosynchronous orbit. Journal of Spacecraft and Rockets 27, 433–437 (1990). DOI 10.2514/3.26161 15. Colombo, C.: Long-term evolution of highly-elliptical orbits: Luni-solar perturbation effects for stability and re-entry. In: AAS-15-395, Proceedings of the 25th AAS/AIAA Space Flight Mechanics Meeting, Williamsburg, Virginia (2015) 16. Colombo, C.: Planetary orbital dynamics (PlanODyn) suite for long term propagation in perturbed environment. In: Proceedings of the 6th International Conference on Astrodynamics Tools and Techniques (ICATT), ESOC/ESA, Darmstadt, Germany, (2016) 17. Colombo, C., Letizia, F., Alessi, E.M., Landgraf, M.: End-of-life earth re-entry for highly elliptical orbits: The integral mission. In: AAS 14-325, Proceedings of the 24th AAS/AIAA Space Flight Mechanics Meeting, Santa Fe, New Mexico (2014) 18. Daquin, J., Gkolias, I., Rosengren, A.J.: Drift and its mediation in terrestrial orbits. Frontiers in Applied Mathematics and Statistics 4, 35 (2018). DOI 10.3389/fams.2018. 00035. URL https://www.frontiersin.org/article/10.3389/fams.2018.00035
+19. Daquin, J., Rosengren, A.J., Alessi, E.M., Deleflie, F., Valsecchi, G.B., Rossi, A.: The dynamical structure of the MEO region: long-term stability, chaos, and transport. Celestial Mechanics and Dynamical Astronomy 124, 335–366 (2016). DOI 10.1007/s10569-015-9665-9 20. Delhaise, F., Morbidelli, A.: Luni-solar effects of geosynchronous orbits at the critical inclination. Celestial Mechanics and Dynamical Astronomy 57, 155–173 (1993). DOI 10.1007/BF00692471 21. Delong, N., Fr ́emeaux, C.: Eccentricity Management for Geostationary Satellites during End of Life Operations. In: D. Danesy (ed.) 4th European Conference on Space Debris, ESA Special Publication, vol. 587, p. 297 (2005)
+22. Efroimsky, M.: Long-term evolution of orbits about a precessing oblate planet: 1. the case of uniform precession. Celestial Mechanics and Dynamical Astronomy 91(1), 75–108 (2005). DOI 10.1007/s10569-004-2415-z. URL https://doi.org/10.1007/ s10569-004-2415-z
+23. ESA: Esa space debris mitigation compliance verification guidelines. ESSB-HB-U-002 (2015) 24. Fremeaux, C., Moussi, A., Vintenat, L., Moulin, M.: End of Life Operations for LEO and GEO Satellites: 30 Years of Continuous Improvement. In: 6th European Conference on Space Debris, ESA Special Publication, vol. 723, p. 82 (2013) 25. Gachet, F., Celletti, A., Pucacco, G., Efthymiopoulos, C.: Geostationary secular dynamics revisited: application to high area-to-mass ratio objects. Celestial Mechanics and Dynamical Astronomy 128, 149–181 (2017). DOI 10.1007/s10569-016-9746-4 26. Gkolias, I., Daquin, J., Gachet, F., Rosengren, A.J.: From Order to Chaos in Earth Satellite Orbits. Astronomical Journal 152, 119 (2016). DOI 10.3847/0004-6256/152/ 5/119 27. Gkolias, I., Lara, M., Colombo, C.: An ecliptic perspective for analytical satellite theories. In: Proceedings of the AIAA/AAS Astrodynamics Specialist Conference, AIAA/AAS Snowbird, Utah (2018)
+
+
+Towards a sustainable GEO 33
+28. Goldreich, P.: Inclination of satellite orbits about an oblate precessing planet. Astronomical Journal 70, 5 (1965). DOI 10.1086/109673 29. Gurfil, P.: Effect of equinoctial precession on geosynchronous earth satellites. Journal of Guidance Control Dynamics 30 (2007). DOI 10.2514/1.21479 30. IADC: IADC space debris mitigation guidelines. URL: http://www.iadc-online.org/ (2011) 31. Jenkin, A., McVey, J.: Lifetime reduction for highly inclined, highly eccentric disposal orbits by changing inclination. In: Proceedings of the AIAA/AAS Astrodynamics Specialist Conference and Exhibit, AIAA/AAS Honolulu, Hawaii (2008) 32. Jenkin, A., McVey, J., Peterson, G.: Analysis of a threshold on long-term orbital collision probability. In: Proceedings of the AIAA/AAS Astrodynamics Specialist Conference, AIAA/AAS Snowbird, Utah (2018) 33. Jenkin, A.B., McVey, J.P., Wilson, J.R., Sorge, M.E.: Tundra disposal orbit study. In: Proceedings of the 7th European Conference on Space Debris, April 18-21, 2017, Darmstadt (Germany) (2017) 34. Kaufman, B., Dasenbrock, R.: Higher order theory for long-term behavior of earth and lunar orbiters. Tech. rep., Naval Research Lab Washington DC Operations reseach branch (1972) 35. Kaula, W.M.: Development of the lunar and solar disturbing functions for a close satellite. Astronomical Journal 67, 300 (1962). DOI 10.1086/108729 36. Kaula, W.M.: Theory of satellite geodesy: applications of satellites to geodesy (1966) 37. Kozai, Y.: Secular perturbations of asteroids with high inclination and eccentricity. The Astronomical Journal 67, 591 (1962). DOI 10.1086/108790 38. Kozai, Y., Kinoshita, H.: Effects of Motion of the Equatorial Plane on the Orbital Elements of an Earth Satellite. Celestial Mechanics 7, 356–366 (1973). DOI 10.1007/ BF01227855 39. Krivov, A.V., Getino, J.: Orbital evolution of high-altitude balloon satellites. Astronomy and Astrophysics 318, 308–314 (1997) 40. Lane, M.T.: On analytic modeling of lunar perturbations of artificial satellites of the earth. Celestial Mechanics and Dynamical Astronomy 46, 287–305 (1989). DOI 10. 1007/BF00051484 41. Lara, M., Elipe, A.: Periodic Orbits Around Geostationary Positions. Celestial Mechanics and Dynamical Astronomy 82, 285–299 (2002). DOI 10.1023/A:1015046613477 42. Lidov, M.: The evolution of orbits of artificial satellites of planets under the action of gravitational perturbations of external bodies. Planetary and Space Science 9(10), 719 – 759 (1962). DOI https://doi.org/10.1016/0032-0633(62)90129-0. URL http: //www.sciencedirect.com/science/article/pii/0032063362901290
+43. Lieske, J.H., Lederle, T., Fricke, W., Morando, B.: Expressions for the precession quantities based upon the IAU (1976) system of astronomical constants. Astronomy and Astrophysics 58, 1–16 (1977) 44. Liu, J.J.F., Alford, R.L.: Semianalytic Theory for a Close-Earth Artificial Satellite. Journal of Guidance Control Dynamics 3, 304–311 (1980). DOI 10.2514/3.55994 45. Meeus, J.: Astronomical algorithms (1998) 46. Merz, K., Krag, H., Lemmens, S., Funke, Q., Bttger, S., Sieg, D., Ziegler, G., Vasconcelos, A., Sousa, B., Volpp, H.J., Southworth, R.: Orbit aspects of end-of-life disposal from highly eccentric orbits. In: Proceedings of the 25th International Symposium on Space Flight Dynamics ISSFD, Munich, Germany (2015) 47. Montenbruck, O., Gill, E.: Satellite orbits: models, methods and applications. Springer Science & Business Media (2012) 48. Rosengren, A.J., Alessi, E.M., Rossi, A., Valsecchi, G.B.: Chaos in navigation satellite orbits caused by the perturbed motion of the Moon. Monthly Notices of the Royal Astronomical Society 449, 3522–3526 (2015). DOI 10.1093/mnras/stv534 49. Rosengren, A.J., Daquin, J., Tsiganis, K., Alessi, E.M., Deleflie, F., Rossi, A., Valsecchi, G.B.: Galileo disposal strategy: stability, chaos and predictability. Monthly Notices of the Royal Astronomical Society 464, 4063–4076 (2017). DOI 10.1093/mnras/stw2459 50. Rosengren, A.J., Skoulidou, D.K., Tsiganis, K., Voyatzis, G.: Dynamical cartography of earth satellite orbits. Advances in Space Research (2018). DOI https://doi.org/10. 1016/j.asr.2018.09.004. URL http://www.sciencedirect.com/science/article/pii/ S0273117718307002
+
+
+34 Ioannis Gkolias, Camilla Colombo
+51. Rossi, A., Colombo, C., Tsiganis, K., Beck, J., Rodriguez, J.B., Walker, S., Letterio, F., Dalla Vedova, F., Schaus, V., Popova, R., Francesconi, A., Stokes, H., Schleutker, T., Alessi, E.M., Schettino, G., Gkolias, I., Skoulidou, D.K., Holbrough, I., Bernelli Zazzera, F., Stoll, E., Kim, Y.: Redshift: A global approach to space debris mitigation. Aerospace 5(64) (2018). DOI 10.3390/aerospace5020064. URL http://www.mdpi.com/2226-4310/ 5/2/64
+52. Schildknecht, T., Musci, R., Ploner, M., Beutler, G., Flury, W., Kuusela, J., de Leon Cruz, J., de Fatima Dominguez Palmero, L.: Optical observations of space debris in GEO and in highly-eccentric orbits. Advances in Space Research 34, 901–911 (2004). DOI 10.1016/j.asr.2003.01.009 53. Skoulidou, D.K., Rosengren, A.J., Tsiganis, K., Voyatzis, G.: Cartographic study of the meo phase space for passive debris removal. In: Proceedings of the 7th European Conference on Space Debris, April 18-21, 2017, Darmstadt (Germany) (2017) 54. Valk, S., Delsate, N., Lemaˆıtre, A., Carletti, T.: Global dynamics of high area-to-mass ratios GEO space debris by means of the MEGNO indicator. Advances in Space Research 43, 1509–1526 (2009). DOI 10.1016/j.asr.2009.02.014 55. Wytrzyszczak, I., Breiter, S., Borczyk, W.: Regular and chaotic motion of high altitude satellites. Advances in Space Research 40, 134–142 (2007). DOI 10.1016/j.asr.2006.11. 020 56. Zhang, M.J., Zhao, C.Y., Hou, Y.G., Zhu, T.L., Wang, H.B., Sun, R.Y., Zhang, W.: Long-term dynamical evolution of Tundra-type orbits. Advances in Space Research 59, 682–697 (2017). DOI 10.1016/j.asr.2016.10.016

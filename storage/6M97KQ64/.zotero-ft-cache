@@ -1,0 +1,357 @@
+The ExoTETHyS Package: Tools for Exoplanetary Transits around Host Stars
+G. Morello1,2,3 , A. Claret4,5 , M. Martin-Lagarde1, C. Cossou6, A. Tsiaras3 , and P.-O. Lagage1
+1 AIM, CEA, CNRS, Université Paris-Saclay, Université Paris Diderot, Sorbonne Paris Cité, F-91191 Gif-sur-Yvette, France; giuseppe.morello@cea.fr
+2 INAF—Osservatorio Astronomico di Palermo, Piazza del Parlamento 1, I-90134 Palermo, Italy
+3 Dept. of Physics & Astronomy, University College London, Gower Street, WC1E 6BT London, UK
+4 Instituto de Astrofísica de Andalucía, CSIC, Apartado 3004, E-18080 Granada, Spain
+5 Dept. Física Teórica y del Cosmos, Universidad de Granada, Campus de Fuentenueva s/n, E-10871, Granada, Spain
+6 Institut d’Astrophysique Spatiale, CNRS/Université Paris-Sud, Université Paris-Saclay, bâtiment 121, Université Paris-Sud, F-91405 Orsay Cedex, France Received 2019 August 26; revised 2019 October 27; accepted 2019 December 6; published 2020 January 31
+Abstract
+We present here the first release of the open-source python package ExoTETHyS (stable:https://zenodo.org/ badge/latestdoi/169268509, development version:https://github.com/ucl-exoplanets/ExoTETHyS/), which aims to provide a stand-alone set of tools for modeling spectrophotometric observations of transiting exoplanets. In particular, we describe: (1) a new calculator of stellar limb-darkening coefficients that outperforms the existing software by one order of magnitude in terms of light-curve model accuracy, i.e., down to <10 parts per million, and (2) an exact transit light-curve generator based on the entire stellar intensity profile rather than limb-darkening coefficients. New tools will be added in later releases to model various effects in exoplanetary transits and eclipsing binaries. ExoTETHyS is a reference package for high-precision exoplanet atmospheric spectroscopy with the upcoming James Webb Space Telescope and Atmospheric Remote-sensing Infrared Exoplanet Large-survey missions.
+Unified Astronomy Thesaurus concepts: Observational astronomy (1145); Spectroscopy (1558); High time resolution astrophysics (740); Exoplanet atmospheres (487); Stellar atmospheres (1584); Transit photometry (1709); Eclipsing binary stars (444); Exoplanet systems (484); Stellar astronomy (1583); Limb darkening (922)
+1. Introduction
+More than 3000 transiting exoplanets have been discovered in the last 20 years. The number of transiting exoplanets accounts for about three-quarters of the current exoplanet census,7 although this large fraction is due to targeted research programs rather than being a random sample from the exoplanet population. The success of the transit method is due to several contributing factors, including its ability to characterize them in great detail. A transit is revealed by a decrement in flux while the planet occults part of the stellar disk. The main observables are the transit depth and durations, leading to measurements of the exoplanet size, orbital semimajor axis and inclination, and stellar mean density (Seager & Mallén-Ornelas 2003). Transit spectroscopy is now routinely used to investigate the chemistry and physics of exoplanet atmospheres, through differences in transit depth of ∼10–100 parts per million (ppm) relative to the stellar flux at multiple wavelengths (e.g., Iyer et al. 2016; Sing et al. 2016; Tsiaras et al. 2018). Accurate modeling of the host star effects is mandatory to achieve the spectrophotometric precision required for characterizing the atmosphere of transiting exoplanets. The most prominent effect is stellar limb-darkening (Mandel & Agol 2002), followed by magnetic activity (Ballerini et al. 2012; Zellem et al. 2017), granulation (Chiavassa et al. 2017), and, in some cases, rotational oblateness and gravity darkening (Howarth & Morello 2017), and tidal deformations (Akinsanmi et al. 2019; Hellard et al. 2019). Among the nonstellar effects, the exoplanet nightside emission can also play a significant role (Kipping & Tinetti 2010; Morello et al. 2019).
+The ExoTETHyS package is conceived as a toolbox for those who analyze the exoplanetary transits. The first release focuses on the tools for modeling the stellar limb-darkening effect, the importance of which is ubiquitous in transit observations, as well as in optical interferometry, microlensing, and eclipsing binary observations. Future versions of ExoTETHyS will include useful tools for modeling other effects, as well as for estimating their impact on specific observations, based on the astrophysical system parameters, the instrument passband, and the noise level. Accurate modeling of all of the aforementioned effects proved to be crucial in the analysis of several CoRoT and Kepler objects (e.g., Mazeh & Faigler 2010; Barnes et al. 2011; Mazeh et al. 2012; Masuda 2015; Howarth & Morello 2017; Reinhold et al. 2017; Shporer 2017; Nielsen et al. 2019), because of the high-precision photometry down to the 10 ppm level (Christiansen et al. 2012). A similar photometric precision is expected for some of the ongoing Transiting Exoplanet Survey Satellite (TESS) observations (Ricker et al. 2014), future observations with the CHaracterising ExOPlanet Satellite (CHEOPS; Isaak & Benz 2019) and PLAnetary Transits and Oscillations (PLATO; Rauer et al. 2014), and in spectroscopic observations with the upcoming James Webb Space Telescope (JWST; Beichman et al. 2014) and Atmospheric Remote-sensing Infrared Exoplanet Largesurvey (ARIEL; Pascale et al. 2018) space missions. Stellar limb-darkening is the wavelength-dependent radial decrease in specific intensity. Consequently, the transit light curve deviates from the flat-bottomed shape that would be observed in the case of a uniform stellar disk; the difference
+signal can be as large as ∼104 ppm for the transit of a hot Jupiter observed at UV or visible wavelengths. Typically, the radial intensity distribution computed from specific stellar atmosphere models is parameterized by a set of limb-darkening coefficients, which are fixed in the analyses of transit light
+The Astronomical Journal, 159:75 (12pp), 2020 February https://doi.org/10.3847/1538-3881/ab63dc © 2020. The American Astronomical Society. All rights reserved.
+7 Source:https://exoplanetarchive.ipac.caltech.edu.
+1
+Software reviewed by the Journal of Open Source Software
+
+
+curves. Many researchers have produced multiple grids of stellar atmosphere models with different codes, then used to compile precalculated tables of limb-darkening coefficients (e.g., Claret 2000, 2003, 2004, 2008, 2017, 2018; Sing 2010; Claret & Bloemen 2011; Howarth 2011a; Claret et al. 2012, 2013, 2014; Neilson & Lester 2013a, 2013b; Magic et al. 2015; Reeve & Howarth 2016). The lack of empirical validation for stellar limb-darkening prevents the final choice of the most reliable model(s). The presence of unocculted stellar spots during an exoplanetary transit may alter the effective limb-darkening coefficients, which will be slightly different from those calculated for the case of unspotted stellar surface (Csizmadia et al. 2013). In some cases, significantly different parametric intensity profiles have been obtained from the same model atmosphere, depending on the sampling of the model intensity profile, the functional form (so-called limb-darkening law), and/or the fitting algorithm adopted (Claret 2000; Heyrovský 2007; Howarth 2011b; Espinoza & Jordán 2015). The system parameters obtained from the light-curve fits with the alternative sets of limb-darkening coefficients can vary by more than the respective 1σ error bars, typically, if the relative photometric precision of the observations is of the order of (or better than) 100 ppm per minute interval. In this paper, we probe an optimized fitting algorithm for the limb-darkening coefficients that minimizes the difference between (numerically integrated) reference light curves and the corresponding approximated transit models with limbdarkening coefficients. Therefore we eliminate the degeneracy from the choice between several fitting algorithms that were leading to significantly different parametric profiles for the same stellar atmosphere model (e.g., Espinoza & Jordán 2015). The high-fidelity match between the stellar intensity profiles and the transit light-curve models facilitates comparative studies of the model atmospheres, especially with the increasing number of observations with a spectrophotometric precision down to ∼10 ppm (e.g., CoRoT, Kepler, TESS, and Hubble Space Telescope (HST)/WFC3 data).
+1.1. Structure of the Paper
+Section 2 provides a technical description of the ExoTETHyS package and the algorithms adopted. Section 3 discusses the precision of the limb-darkening calculator for the analysis of exoplanetary transits. In particular, Section 3.1 compares various algorithms that are adopted in the other publicly available codes and their variants, Section 3.2 compares the performances of the alternative limb-darkening laws, and Section 3.3 provides a formula to estimate the potential error in the transit model based on the goodness of fit for the limb-darkening coefficients that should be compared with the noise level in the observations. Section 4 discusses the main functionality of the ExoTETHyS package, its current and
+future usage. Finally, Section 5 summarizes the key points discussed in this paper.
+2. Description of the ExoTETHyS Package
+The first release of ExoTETHySincludes the following subpackages:
+1. Stellar Atmosphere Intensity Limb (SAIL), which can calculate the limb-darkening coefficients for specific stellar targets or over predetermined parameter grids; 2. Transit Ring-Integrated Profile (TRIP), which can compute an exact transit light curve by direct integration of the occulted stellar flux, without using an analytical function (limb-darkening law) to approximate the stellar intensity profile.
+The TRIP subpackage was conceived to model exoplanetary transits. Following requests by users, we are adding a function to model eclipsing binaries.
+2.1. The SAIL Subpackage
+The SAIL subpackage is a generic stellar limb-darkening calculator that is not specific to a predetermined list of instruments or standard passbands. It is conceptually similar to the calculator provided by Espinoza & Jordán (2015), but with different features. A technical difference is the use of a novel fitting algorithm for obtaining the limb-darkening coefficients, specifically optimized for modeling the exoplanetary transits, instead of multiple algorithm options with unclear performances (see Sections 2.1.4 and 3.1).
+2.1.1. Input and Output
+The SAIL subpackage requires a configuration file to specify the desired calculation. The user can choose either an “individual” or “grid” calculation type. The first option enables calculation of the limb-darkening coefficients for a star or for a list of stars with the parameters specified by the user, while the latter will provide the limb-darkening coefficients for a grid of precalculated stellar model atmospheres. In both cases, the user must select one of the available stellar model grids, which were computed with different codes and settings (see Table 1 and references therein). For each grid, the stellar models are identified by a set of three parameters, i.e., the effective temperature (Teff), the surface gravity (log g), and the metallicity ([M/H]). As the limb-darkening coefficients are mostly dependent on the effective temperature, the user must provide the effective temperatures of all the individual stars. The other
+parameters have default values of log g = 4.5 and [M/ H]=0.0, corresponding to a main-sequence star with solar abundances, if they are not given by the user. For the grid calculation type, the default option is to calculate the limbdarkening coefficients for all the stellar models in the selected
+Table 1
+Stellar Model Atmosphere Grids Available with the First Release of ExoTETHyS
+Name Geometrya Range Teff(K) Range log g Range [M/H] Range λ (μm) Reference
+ATLAS P-P 3500–50,000 0.0–5.0 −5.0–1.0 0.009–160.0 Claret (2000) PHOENIX_2012_13 S1 3000–10,000 0.0–6.0 0.0 0.25–10.0 Claret et al. (2012, 2013) PHOENIX_2018 S1 2300–12,000 0.0–6.0 0.0 0.05–2.6 Claret (2018)
+Note.
+a Geometry types: P-P=plane-parallel; S1, spherical 1D.
+2
+The Astronomical Journal, 159:75 (12pp), 2020 February Morello et al.
+
+
+database. Alternatively, the user can select a subgrid by specifying the minimum and/or maximum values for each stellar parameter. Another key input is the passband, i.e., the total spectral response of the observing instrument. For most instruments, the spectral response is available as a table of photon-to-electron conversion factors at given wavelengths. The limb-darkening coefficients do not depend on the absolute values of the spectral response, so that a scaled/normalized version of the spectral response will give identical results. The spectral responses of the most common instruments for transiting exoplanets are built into the package. The code can accept any user-defined passband with the same file format. It is also possible to calculate the limb-darkening coefficients for multiple wavelength bins within a given passband by specifying the two wavelengths delimiting each bin. This option is particularly useful for exoplanet spectroscopic observations, such as those currently performed with HST/WFC3. The last mandatory input in the configuration file is the list of limb-darkening laws to adopt (at least one). The code includes several built-in limb-darkening laws, including all of the most commonly used (see Section 2.1.3), but it can also accept userdefined laws. The “basic” outputs are python dictionaries containing the best-fit limb-darkening coefficients obtained for the required passbands, wavelength bins, and limb-darkening laws. The output dictionaries also provide the corresponding weighted rms of the fitting residuals to allow for a quick quality check (see Section 3.3). For the case of individual calculation type, the results obtained for each target are stored in separate pickle files. Optionally, the user can request a “complete” output, which includes intermediate products such as the numeric intensity profiles at various stages of the calculation (see Sections 2.1.2–2.1.5). The additional information of the complete output is offered, mainly, as a way to identify bugs in the code and/or issues with certain stellar model atmospheres and wavelengths. Usually, the exoplanetary scientists will be interested to the basic output only.
+2.1.2. From the Stellar Model Atmospheres to the Passbandintegrated Intensities
+The stellar model-atmosphere grids consist of one file for each triple of stellar parameters (Teff, log g, [M/H]), providing
+the specific intensities (Iλ(μ)) in units of erg cm−2 s−1 Å−1 sr−1 at several positions on the sky-projected stellar disk over a given spectral range. For historical reasons, the independent
+variable is m = cos q, where θ is the angle between the line of sight and the corresponding surface normal. The radial coordinate in the sky-projected disk is r = 1 - m2 , where r=1 (μ=0) corresponds to the spherical surface radius. Table 1 reports the information about the databases available with the first release of ExoTETHyS. We refer to the relevant papers and references therein for comparisons between the models. The passband-integrated intensities are calculated as
+ò
+m μ l m lll
+l l
+I I R d, 1
+pass pass 1
+2
+( ) ( ) () ()
+where Rpass(λ) is the spectral response of the instrument in
+electrons photon−1, and λ1 and λ2 are the passband or wavelength bin limits. The passband-integrated intensities are
+obtained in units proportional to electrons cm−2 s−1 sr−1. As the limb-darkening coefficients are not affected by the (omitted) proportionality factor in Equation (1), the final intensities are normalized such that Ipass (μ=0)=1. The intensity profiles, Iλ(μ), have distinctive behaviors depending on the plane-parallel or spherical geometry adopted by the selected grid of model atmospheres. In particular, the spherical intensity profiles show a steep drop-off close to the stellar limb, which is not observed in the plane-parallel models. The explanation for the different behaviors is exhaustive in the literature (Wittkowski et al. 2004; Espinoza & Jordán 2015; Morello et al. 2017). The almost null intensities at small μ are integrated over lines of sight that intersect only the outermost atmospheric shells, which have the smallest emissivity. Here μ=0 (r=1) corresponds to the outermost shell of the model atmosphere, which is typically outside the stellar radius that would be observed in transit. Our algorithm calculates the photometric radius at the inflection point of the spherical intensity profile, i.e., where the gradient ∣dI (r) dr∣ is the maximum (Wittkowski et al. 2004; Espinoza & Jordán 2015). The radial coordinates are then rescaled such that r=1 (μ=0) at the photometric radius, and those intensities with rescaled r>1 are rejected. No rescaling is performed for the plane-parallel models.
+2.1.3. Limb-darkening Laws
+A long list of analytical forms, so-called limb-darkening laws, has been proposed in the literature to approximate the stellar intensity profiles. The following options are built in the package:
+1. the linear law (Schwarzschild 1906),
+m = - -m
+Il ( ) 1 a (1 ); (2)
+2. the quadratic law (Kopal 1950),
+m = - -m - -m
+Il 1 u 1 u 1 ; 3
+1 22
+( ) ( ) ( ) ()
+3. the square-root law (Diaz-Cordoves & Gimenez 1992),
+m = - - m - -m
+Il 1 v 1 v 1 ; 4
+12
+( ) ( ) ( ) ()
+4. the power-2 law (Hestroffer 1997),
+m = - -m
+la
+I ( ) 1 c(1 ); (5)
+5. the four-coefficient law (Claret 2000), hereinafter referred to as claret-4,
+å
+m = - -m
+l =
+I 1 a1 ; 6
+k
+nk
+1
+4 2
+( ) ( ) ()
+6. a generalized nth-degree polynomial law,
+å
+m = - -m
+l =
+I 1 b1 ; 7
+k
+n
+kk
+1
+( ) ( ) ()
+7. a generalized claret-n law,
+å
+m = - -m
+l =
+I 1 c1 . 8
+k
+n
+kk
+1
+2
+( ) ( ) ()
+Additionally, user-defined limb-darkening laws can be easily implemented. We recommend using the claret-4 law to achieve a model precision of 10 ppm in the analysis of exoplanetary transits (see Section 3.2). The next release of ExoTETHyS will include a grid of white dwarf models, for which we have also
+3
+The Astronomical Journal, 159:75 (12pp), 2020 February Morello et al.
+
+
+found the claret-4 law to be significantly more accurate than the two-coefficient laws (Claret et al. 2020).
+2.1.4. From the Passband-integrated Intensities to the Limb-darkening Coefficients
+The limb-darkening coefficients are obtained through a weighted least-squares fit of the passband-integrated intensity profile with weights proportional to the sampling interval in r, hereinafter referred to as weighted-r fit. The corresponding cost function is the weighted rms of residuals,
+mm
+=å 
+å
+=
+=
+r wI I
+w
+weighted rms , 9
+i
+ni i i
+i
+ni
+1 pass pass
+law 2
+1
+1 2
+⎛
+⎝
+⎜⎜
+⎞
+⎠
+⎟⎟
+‐ ( ( ) ( ) ()
+with weights
+=
+-+ - = - << =
+-+
+
+w
+r rr i r r in r in
+1 0.5 , if 1 0.5 , if 1 0.5 , if
+, 10
+i ii
+n
+1 12
+11
+1
+⎧
+⎨⎪
+⎩⎪
+() ( ) ( ) ()
+where the ri are arranged in descending order, and rn=0. The choice of cost function is optimized for the study of exoplanet transits, as detailed in Section 3.1. The performances of the spherical model fits are further enhanced by discarding those points with r>0.99623 (after rescaling as explained in Section 2.1.2). This cut is a generalization of that implemented in the quasispherical (QS) fits by Claret et al. (2012). For this reason, we rename the total fitting procedure explained here for the spherical intensity profiles as the weighted-r QS fit. Further details about the alternative fitting procedures are discussed in Section 3.1.
+2.1.5. Interpolation from the Grid of Stellar Models
+The process described in Sections 2.1.2–2.1.4 enables the calculation of limb-darkening coefficients for the stellar atmosphere models contained in the grid, starting from their precalculated specific intensities. The limb-darkening coefficients for an individual target with a generic set of stellar parameters are obtained by sequential linear interpolation through the following steps:
+1. identification of the neighbors in the model-grid, i.e., the vertices of the cube in parameter space that contains the requested model (maximum eight models); 2. calculation of the limb-darkening coefficients for each of the neighbors; 3. interpolation in [M/H] between models with the same Teff and log g, leading to a maximum of four sets of limbdarkening coefficients with the requested [M/H]; 4. interpolation in log g between the above calculated sets of coefficients with the same Teff, leading to a maximum of two sets of limb-darkening coefficients with the requested log g and [M/H]; 5. interpolation in Teff between the above calculated sets of coefficients.
+We note that this sequential interpolation is possible because of the regularity of the model grids.
+2.2. The TRIP Subpackage
+The TRIP subpackage is used to generate exact transit light curves by direct integration of the occulted stellar flux at given
+instants. It assumes a dark spherical planet transiting in front of a spherically symmetric (unspotted) star. In this simple case, the normalized flux (i.e., relative to the stellar flux) is a function of two geometric variables, as reported by Mandel & Agol (2002), and of the stellar intensity profile:
+F (p, z, I (m)) = 1 - L(p, z, I (m)), (11)
+where p is the planet-to-star radii ratio (p=Rp/R*), z is the sky-projected distance between the centers of the two spheres in units of the stellar radius, and I(μ) is the stellar intensity profile. TRIP does not use an analytical approximation of the limb-darkening profile, unlike most transit light-curve calculators such as those provided by Mandel & Agol (2002), Giménez (2006), Agol et al. (2019), JKTEBOP (Southworth et al. 2004), TAP (Gazak et al. 2012), EXOFAST (Eastman et al. 2013), PyTransit (Parviainen 2015), BATMAN (Kreidberg 2015), and PYLIGHTCURVE8 (Tsiaras et al. 2016).
+2.2.1. Input and Output
+The TRIP subpackage requires a configuration file, where the user has to specify the name of the text files containing the limb-darkening profile, the phase, time, or z-series for which to calculate the normalized flux, and a list of parameter values that includes p and those parameters eventually needed to compute the z-series (see Section 2.2.2). The limb-darkening file consists of two columns with the μ or r values (first column) and the corresponding specific intensities (second column). A list of optional parameters can be used to set the calculation details, i.e., the number of annuli, the interpolation variable, and the polynomial order for the spline interpolation (see Section 2.2.3). It is also possible to define simple operations on the original limb-darkening profile, i.e., a possible cutoff in μ or r with or without rescaling the μ or r values to the cutoff radius. The output is a text or pickle file containing the normalized flux series for the requested phase, time, or z-series.
+2.2.2. Computing the z-series
+In general, z is a function of the orbital phase (Φ), i.e., the fraction of orbital period (P) from the closest transit event:
+F= - 
+t
+Pn
+E.T. , (12)
+where t denotes time, E.T. is the epoch of transit (i.e., a reference mid-transit time), and n is the number of orbits from the E.T. rounded to the nearest integer. Conventionally, Φ values are in the range of [−0.5, 0.5] or [0, 1] and Φ=0 at mid-transit time. The projected star–planet separation is given by
+p
+w
+=
+-F 
++ -+
+13
+z
+ai
+ae
+ef f i
+1 cos 2 sin circular orbit
+1
+1 cos 1 sin sin eccentric orbit
+,
+R
+R
+22
+2
+22
+⎧
+⎨⎪
+⎩⎪
+()
+()
+()
+where aR is the orbital semimajor axis in units of the stellar radius, i is the inclination, e is the eccentricity, ω is the argument of periastron, and f is the true anomaly. In the
+8 https://github.com/ucl-exoplanets/pylightcurve
+4
+The Astronomical Journal, 159:75 (12pp), 2020 February Morello et al.
+
+
+eccentric case, the true anomaly is calculated from the orbital phase by solving Kepler’s equation,
+p - w + pF = E - e E
+2 2 sin , (14)
+then
+=+
+
+fe
+e
+E
+2 arctan 1
+1 tan 2 . 15
+⎛
+⎝⎜ ⎞
+⎠⎟ ( )
+2.2.3. Calculating the Normalized Flux
+The total and occulted stellar flux are given, respectively, by the integrals
+F = ò I r 2pr dr, 16
+0
+1
+* () ( )
+and
+F = ò I r 2pr f r dr, 17
+pz
+,occ
+0
+1
+,
+* () () ( )
+with
+p
+=
++ - - <<+
+-+ 
+
+ 
+fr
+rzp
+zr z p r z p
+rzp rzp rpz
+1 arccos 2
+0 or 1
+.
+18
+pz
+r
+,
+22 2
+01
+⎧
+⎨
+⎪⎪
+⎩
+⎪⎪
+()
+∣∣
+()
+I(r) is the specific intensity at the normalized radial coordinate r = 1 - m2 , and fp, z(r) is the fraction of circumference with radius r covered by the planet. Equations (16) and (17) rely on the assumed spherical symmetry for the star; Equation (18) also makes use of the planet sphericity. Finally, the normalized flux is given by Equation (11) with
+Lp z Im =F
+F
+, , . 19
+,occ
+*
+*
+( ( )) ( )
+The integrals in Equations (16) and (17) are calculated numerically using the mid-point rule with a uniform partition in r. The specific intensities are evaluated at the partition radii by interpolating in μ or r from the input limb-darkening profiles. The TRIP algorithm with default settings is identical to the “tlc” described by Morello et al. (2017).
+3. Performance of ExoTETHyS
+3.1. Comparison between Fitting Algorithms for the Stellar Intensity Profiles
+A long list of methods has been adopted in the literature for fitting the limb-darkening laws to the model intensity profiles leading to significantly different limb-darkening coefficients. The coefficients obtained with a simple least-squares fit depend on the spatial distribution of the precalculated intensities. The effect of sampling is particularly evident for the PHOENIXprofiles because of a much finer sampling near the drop-off region. For example, Figure 1 shows the case of a star similar to HD209458 in the mid-infrared, for which the simple least
+Figure 1. Example with a model intensity distribution for a star similar to HD209458 (Teff=6100 K, log g = 4.5), integrated over the 7.59–7.61 μm wavelength range, using the PHOENIX_2012_13 database (see Table 1). Top, left panel: normalized specific intensities vs. μ from the stellar atmosphere model (black circles), unweighted (gray), weighted-r (orange), and weighted-r QS (red) model fits with claret-4 coefficients. The vertical dashed line denotes the cutoff value for the quasispherical fit (see Section 3.1). Top, right panel: analogous plot vs. r. Bottom panels: residuals between the fitted and model intensity values. The corresponding unweighted and weighted rms amplitudes of residuals are also reported. Note that, in this case, the unweighted least-squares fit leads to a non-monotonic radial intensity profile, which is physically unexpected.
+5
+The Astronomical Journal, 159:75 (12pp), 2020 February Morello et al.
+
+
+squares solution presents a non-monotonic (unphysical) profile with unexpected undulations. In this paper, we compare the following fitting procedures:
+1. unweighted, i.e., simple least-squares fit; 2. weighted-r, i.e., weighted least-squares fit with weights proportional to the sampling interval in r, as detailed in Equations (9) and (10);
+3. weighted-μ, i.e., weighted least-squares fit with weights proportional to the sampling interval in μ; 4. interp-μ100, i.e., least-squares fit on the intensities interpolated over 100 μ values with a uniform separation in μ, as suggested by Claret & Bloemen (2011); 5. interp-μ1000, i.e., least-squares fit on the intensities interpolated over 1000 μ values with a uniform separation in μ;
+Figure 2. Top panel: simulated transit light curve (black) of HD209458b as it would be observed by TESS, and best-fit model with claret-4 limb-darkening coefficients obtained with the weighted-r QS method (red). Bottom panels: residuals between the reference light curve and the best-fit models with claret-4 limbdarkening coefficients obtained with different limb-darkening laws and fitting methods (see Section 3.1). The peak-to-peak and rms amplitudes of the residuals are reported.
+6
+The Astronomical Journal, 159:75 (12pp), 2020 February Morello et al.
+
+
+6. interp-r100, i.e., least-squares fit on the intensities interpolated over 100 r values with a uniform separation in r, as suggested by Parviainen & Aigrain (2015; with an unspecified number of interpolated values); 7. interp-r1000, i.e., least-squares fit on the intensities interpolated over 1000 r values with a uniform separation in r; 8. unweighted QS, i.e., least-squares fit with a cutoff r 0.99623; 9. weighted-r QS, i.e., analogous to weighted-r with a cutoff r 0.99623; 10. weighted-μ QS, i.e., analogous to weighted-μ with a cutoff r 0.99623.
+The cutoff is used to remove the steep drop-off characteristic of the spherical models, hence the term QS. The QS approach was first proposed by Claret et al. (2012), who applied a cutoff μ 0.1 to their library of PHOENIX models with the original μ values. In this work, we redefine the cutoff using the rescaled r, such that it corresponds to the same fraction of the photometric stellar radius for all the models (see Section 2.1.2). Our new definition with r 0.99623 is equivalent to the previous one for the majority of models, particularly for those models that may correspond to main-sequence stars. However, the libraries of PHOENIX models incorporated in the ExoTETHyS package also include models of stellar atmospheres with lower gravities than those analyzed by Claret et al. (2012), corresponding to subgiant, giant, and supergiant stars. For some of these models, the intensity drop-off occurs at μ>0.1, so that the cutoff of μ 0.1 (not rescaled) would be ineffective. In order to evaluate the merits of the alternative fitting procedures to the stellar intensity profile, we generated exact synthetic transit light curves using the TRIP subpackage and compared these light curves with their best-fit solutions obtained with the various sets of claret-4 limb-darkening coefficients. Figure 2 shows the residuals obtained for a noiseless simulation of the transit of HD209458b in the TESS passband when adopting the different sets of limb-darkening coefficients. The weighted-r QS method implemented in ExoTETHyS.SAIL gives the smallest residuals, with a peak-to-peak of 2 ppm and rms amplitude below 1 ppm. The other QS methods, weighted-μ QS and unweighted QS, lead to almost identical residuals, with a peak-to-peak of
+3 ppm. Among the spherical methods, the weighted-r gives the smallest residuals with a peak-to-peak of 9 ppm and an rms amplitude of 2 ppm, followed by the interp-r100 and interp-r 1000 with about 1.5 and 2 times larger residual amplitudes, respectively. All the other methods lead to significantly larger residuals of tens to a few hundred ppm, which are comparable with the predicted noise floor of 60 ppm for the TESS observations (Ricker et al. 2014). Figure 3 shows the peak-to-peak of the residuals for the same transit as a function of wavelength, based on simulated light curves with 20nm passband widths. This spectral analysis confirms the relative ranking of the fitting methods derived from the TESS simulation. In particular, the weighted-r QS method leads to a peak-to-peak of residuals below 2 ppm at wavelengths longer than 1 μm, and overall below 8 ppm. The other QS methods are marginally worse than weighted-r QS at wavelengths shorter than 2 μm, but the worst case peak-to-peak of residuals is less than 13 ppm. The weighted-r method leads to a peak-to-peak of residuals in the range of 5–15 ppm, with a sawtooth-like modulation in wavelength. We noted that the small, but abrupt, jumps that occur at certain wavelengths correspond to changes of the inflection point in the stellar intensity profile as defined in Section 2.1.2. The same phenomenon occurs for all the other spherical models with larger sawtooth-like modulations. It may appear surprising that the peak-to-peak of residuals obtained with the spherical methods tends to be larger at the longer wavelengths, for which the limb-darkening effect is expected to be smaller. The cause of the poor performances of most spherical methods in the infrared is the intensity drop-off, which is typically steeper than the drop-off in the UV and visible. Such drop-off has a negligible effect in the numerically integrated transit light curves, hence the better performances of the QS fits. Figure 4 shows the best-fit transit parameters corresponding to the same spectral light curves, and compared with the respective input parameters corrected for the rescaled r (see Section 2.1.2). We retrieved the correct transit depth within
+5 ppm, the impact parameter within 6×10−4, and the transit duration within 1s at all wavelengths, when using the weighted-r or QS limb-darkening coefficients. However, slightly larger spectral trends appear in these parameters because of the wavelength-dependent stellar radius. The peak-to-peak variation in transit depth over the spectral range of 0.25–10 μm is 10 ppm. The other sets of limb-darkening
+Figure 3. Peak-to-peak of residuals between the reference spectral light curves for the transit of HD209458b and the best-fit models with claret-4 limb-darkening coefficients obtained with different fitting methods (see Section 3.1). Left panel: results obtained with the spherical methods, i.e., taking into account the whole spherical intensity profile. Right panel: results obtained with the quasi-spherical methods, i.e., with a cutoff of r 0.99623, and the weighted-r method (dotted, orange line). The unweighted QS (gray line) and the weighted-μ QS (green line) overlap in the plot. Note the scale difference between the two panels.
+7
+The Astronomical Journal, 159:75 (12pp), 2020 February Morello et al.
+
+
+coefficients introduce orders-of-magnitude larger biases in the retrieved transit parameters, also larger spectral sawtooth-like modulations in the infrared (few tens of ppm in transit depth across 1–10 μm), and severe discrepancies between the parameter values obtained in the UV/visible and those obtained in the infrared.
+3.2. Performance of the Limb-darkening Laws
+Figure 5 compares the peak-to-peak of the spectral lightcurve residuals when adopting the limb-darkening coefficients calculated by ExoTETHyS.SAIL for different limb-darkening laws, as well as the corresponding weighted-r QS rms of the residuals to the stellar intensity profiles. The correlation
+Figure 4. Best-fit transit parameters to the reference spectral light curves for the transit of HD209458b assuming claret-4 limb-darkening coefficients obtained with different fitting methods (see Section 3.1). The true parameter values are reported in black. Left panels: results obtained with the spherical methods, i.e., taking into account the whole spherical intensity profiles. Right panels: results obtained with the quasi-spherical methods, i.e., with a cutoff of r 0.99623, and the weighted-r method (dotted, orange line). Note the scale difference between the two panels.
+8
+The Astronomical Journal, 159:75 (12pp), 2020 February Morello et al.
+
+
+between the two goodness-of-fit measures is explored in Section 3.3. At wavelengths 3 μm, the precision of the power-2 and square-root limb-darkening coefficients is comparable to that of the claret-4 coefficients, resulting in lightcurve residuals below 5 ppm. While the claret-4 law performs similarly well even at shorter wavelengths, the two-coefficient laws lead to larger light-curve residuals up to ∼100 ppm in the UV and visible. The quadratic law is less precise, leading to light-curve residuals above 25 ppm even at 10 μm. Figure 6 shows the fitted transit parameters and their expected values. Typically, the bias in transit depth is of the same order of magnitude of the light-curve residuals, but it can be both larger or smaller than their peak-to-peak amplitudes owing to parameter degeneracies. Table 2 reports the statistics of the errors in transit depth obtained with the different limbdarkening laws across given spectral ranges. The maximum bias in transit depth at 5–10 μm is within 10 ppm for any limbdarkening parameterization, which is just below the minimum photon noise floor for JWST/Mid-InfraRed Instrument (MIRI) observations (Beichman et al. 2014). At ∼1 μm, the twocoefficient laws may introduce a spectral slope of a few tens of ppm, which may have an impact in the analysis of the HST/
+WFC3 spectra (Tsiaras et al. 2018). At wavelengths shorter than 1 μm the two-coefficient laws are unreliable for exoplanet spectroscopy, so that the claret-4 law must be preferred. These conclusions are in agreement with previous studies based on both simulated and real data (Espinoza & Jordán 2016; Morello et al. 2017; Maxted 2018; Morello 2018).
+3.3. Predicted Precision in Light Curves
+Figure 7 shows that, for a fixed transit geometry, the peak-topeak of light-curve residuals is roughly proportional to the weighted-r QS rms of stellar intensity residuals. We found an approximately linear correlation between the two goodness-offit measures for the simulated spectral light curves and stellar intensity profiles, therefore obtaining a wavelength-independent factor. We repeated this test for analogous sets of spectral light curves with different transit parameters, then obtaining different proportionality factors. Our preliminary study suggests that
+= ́  ́  ́
+kp
+r
+peak to peak 10
+weighted QS rms , 20
+ppm 6 2
+( ‐‐ ) ( )
+( ‐ ) ()
+Figure 5. Top, left panel: peak-to-peak of residuals between the reference spectral light curves for the transit of HD209458b and the best-fit models using the limbdarkening coefficients calculated for the different laws (see Section 2.1.3). Top, right panel: weighted-r QS rms of residuals to the model intensity profiles. Bottom panels: zoom-in of the panels above.
+Table 2
+Spectral Analysis of the Error in Transit Depth When Adopting Different Limb-darkening Laws
+Wavelength Range Claret-4 Power-2 Quadratic Square-root
+Maximum bias 0.25–10.0 μm 5 165 235 174 (ppm) <1 μm 4 165 235 174 >1 μm 5 19 27 18 >5 μm 3 4 10 5
+rms bias 0.25–10.0 μm 1 20 20 23 (ppm) <1 μm 2 71 62 81 >1 μm 1 5 11 4 >5 μm 1 2 6 2
+Spectrum 0.25–10.0 μm 10 177 258 341 peak-to-peak <1 μm 7 177 254 341 (ppm) >1 μm 10 27 17 25 >5 μm 2 3 4 3
+Spectrum std 0.25–10.0 μm 2 20 18 23 (ppm) <1 μm 1 45 58 64 >1 μm 2 7 4 5 >5 μm <1 <1 <1 <1
+9
+The Astronomical Journal, 159:75 (12pp), 2020 February Morello et al.
+
+
+where k is a factor of order unity (k1). Equation (20) provides a useful tool for estimating the systematic noise in the light-curve models solely due to the limb-darkening parameterization. The systematic noise in the light-curve models should be smaller than the photon noise limit of the observation in order to avoid significant parameter biases. Note that Equation (20) does not account for uncertainties in the stellar parameters, discrepancies between real and model intensity profiles, and other contaminating signals that may increase the total systematic noise.
+4. Usage of ExoTETHyS
+Currently, the main use of the ExoTETHyS package is to compute stellar limb-darkening coefficients through the SAIL subpackage. These coefficients can be adopted to simulate the
+exoplanetary transit light curves, which are largely used by the scientific consortia of the future exoplanet missions for multiple studies. In particular, ExoTETHyS will be linked with ARIELSim (Sarkar et al. 2016) and ExoNoodle (a generator of timeseries spectra of exoplanetary systems originally designed for JWST observations; M. Martin-Lagarde et al. 2019, in preparation), and it has already been adopted by several members of the two mission consortia. It is also common practice to fix the limb-darkening coefficients obtained from stellar models, such as those calculated with ExoTETHyS.SAIL in the analysis of exoplanetary transit light curves. This approach relies on the perfect match between the model and the real stellar intensity distributions, otherwise introducing a potential bias in the derived exoplanet and orbital parameters. Some authors recommended setting free limb-darkening coefficients in the
+Figure 6. Best-fit transit parameters to the reference spectral light curves for the transit of HD209458b using the limb-darkening coefficients calculated for the different laws (see Section 2.1.3). The true parameter values are reported in black.
+10
+The Astronomical Journal, 159:75 (12pp), 2020 February Morello et al.
+
+
+light-curve fits to minimize the potential bias, but the strong parameter degeneracies may lead to larger error bars or prevent the convergence of the fit (Southworth 2008; Csizmadia et al. 2013). The parameter degeneracies can be mitigated using multiwavelength transit observations to better constrain the orbital parameters (Morello et al. 2017; Morello 2018). Here we suggest an approach to take advantage of the knowledge on the stellar parameters in the form of bayesian priors. The stellar parameters will then be optimized in the light-curve fits instead of using fixed or fully unconstrained limb-darkening coefficients. The limb-darkening coefficients for a given set of stellar parameters, and a given passband or spectroscopic bin, can be interpolated from a precalculated grid. The grid calculation type (see Section 2.1.1) was specifically designed for this purpose.
+5. Conclusions
+We introduced ExoTETHyS, an open-source python package that offers accessory tools for modeling transiting exoplanets and eclipsing binaries. It includes a versatile stellar limb-darkening calculator with multiple choices of model atmosphere grids, parameterizations, passbands (also accepting user input), and specific user-friendly calculation settings. We demonstrated an optimal fitting algorithm for the limbdarkening coefficients, thus eliminating the degree of freedom associated with the choice of fitting algorithm. The claret-4 coefficients obtained through this algorithm ensure a precision level 10 ppm in the relevant transit light curves at all wavelengths. The precision achieved exceeds by one order of magnitude that obtained with most of the algorithms proposed in the previous literature for stellar models with spherical geometry. We also proposed a simple formula for estimating the light-curve model precision, based on the goodness of fit for the limb-darkening coefficients. Finally, we discussed the current and future usage of ExoTETHyS with emphasis on exoplanet atmospheric spectroscopy in the era of JWST and ARIEL.
+The authors would like to thank René Gastaud and Daniel Dicken for useful discussions. G.M., M.M.-L., and P.-O.L. were supported by the LabEx P2IO, the French ANR contract
+05-BLANNT09-573739 and the European Unions Horizon 2020 Research and Innovation Programme, under grant agreement No. 776403. G.M. also acknowledges the contribution from INAF through the “Progetto Premiale: A Way to Other Worlds” of the Italian Ministry of Education, University, and Research. A.C. acknowledges financial support from the Spanish MEC (AYA2015-71718-R and ESP2017-87676-C52-R), the State Agency for Research of the Spanish MCIU through the “Center of Excellence Severo Ochoa” award for the Instituto de Astrofísica de Andalucía (SEV-2017-0709).
+ORCID iDs
+G. Morello https://orcid.org/0000-0002-4262-5661 A. Claret https://orcid.org/0000-0002-4045-8134 A. Tsiaras https://orcid.org/0000-0003-3840-1793
+References
+Agol, E., Luger, R., & Foreman-Mackey, D. 2019, arXiv:1908.03222 Akinsanmi, B., Barros, S. C. C., Santos, N. C., et al. 2019, A&A, 621, A117 Ballerini, P., Micela, G., Lanza, A. F., & Pagano, I. 2012, A&A, 539, A140 Barnes, J. W., Linscott, E., & Shporer, A. 2011, ApJS, 197, 10 Beichman, C., Benneke, B., Knutson, H., et al. 2014, PASP, 126, 1134 Chiavassa, A., Caldas, A., Selsis, F., et al. 2017, A&A, 597, A94 Christiansen, J. L., Jenkins, J. M., Caldwell, D. A., et al. 2012, PASP, 124, 1279 Claret, A. 2000, A&A, 363, 1081 Claret, A. 2003, A&A, 401, 657 Claret, A. 2004, A&A, 428, 1001 Claret, A. 2008, A&A, 482, 259 Claret, A. 2017, A&A, 600, A30 Claret, A. 2018, A&A, 618, A20 Claret, A., & Bloemen, S. 2011, A&A, 529, A75 Claret, A., Cukanovaite, E., Burdge, K., et al. 2020, arXiv:2001.07129 Claret, A., Dragomir, D., & Matthews, J. M. 2014, A&A, 567, A3 Claret, A., Hauschildt, P. H., & Witte, S. 2012, A&A, 546, A14 Claret, A., Hauschildt, P. H., & Witte, S. 2013, A&A, 552, A16 Csizmadia, S., Pasternacki, T., Dreyer, C., et al. 2013, A&A, 549, A9 Diaz-Cordoves, J., & Gimenez, A. 1992, A&A, 259, 227 Eastman, J., Gaudi, B. S., & Agol, E. 2013, PASP, 125, 83 Espinoza, N., & Jordán, A. 2015, MNRAS, 450, 1879 Espinoza, N., & Jordán, A. 2016, MNRAS, 457, 3573 Gazak, J. Z., Johnson, J. A., Tonry, J., et al. 2012, AdAst, 2012, 697967 Giménez, A. 2006, A&A, 450, 1231 Hellard, H., Csizmadia, S., Padovan, S., et al. 2019, ApJ, 878, 119 Hestroffer, D. 1997, A&A, 327, 199 Heyrovský, D. 2007, ApJ, 656, 483 Howarth, I. D. 2011a, MNRAS, 413, 1515 Howarth, I. D. 2011b, MNRAS, 418, 1165 Howarth, I. D., & Morello, G. 2017, MNRAS, 470, 932 Isaak, K. G., & Benz, W. 2019, NatAs, 3, 873 Iyer, A. R., Swain, M. R., Zellem, R. T., et al. 2016, ApJ, 823, 109 Kipping, D. M., & Tinetti, G. 2010, MNRAS, 407, 2589 Kopal, Z. 1950, HarCi, 454, 1 Kreidberg, L. 2015, PASP, 127, 1161 Magic, Z., Chiavassa, A., Collet, R., & Asplund, M. 2015, A&A, 573, A90 Mandel, K., & Agol, E. 2002, ApJL, 580, L171 Masuda, K. 2015, ApJ, 805, 28 Maxted, P. F. L. 2018, A&A, 616, A39 Mazeh, T., & Faigler, S. 2010, A&A, 521, L59 Mazeh, T., Nachmani, G., Sokol, G., Faigler, S., & Zucker, S. 2012, A&A, 541, A56 Morello, G. 2018, AJ, 156, 175 Morello, G., Danielski, C., Dickens, D., Tremblin, P., & Lagage, P. O. 2019, AJ, 157, 205 Morello, G., Tsiaras, A., Howarth, I. D., & Homeier, D. 2017, AJ, 154, 111 Neilson, H. R., & Lester, J. B. 2013a, A&A, 554, A98 Neilson, H. R., & Lester, J. B. 2013b, A&A, 556, A86 Nielsen, M. B., Gizon, L., Cameron, R. H., & Miesch, M. 2019, A&A, 622, A85 Parviainen, H. 2015, MNRAS, 450, 3233 Parviainen, H., & Aigrain, S. 2015, MNRAS, 453, 3821
+Figure 7. Weighted-r QS rms of residuals to the model intensity profiles vs. peak-to-peak of the transit light-curve residuals for the spectral templates of HD20458b adopting different limb-darkening laws. The black line is the global linear fit.
+11
+The Astronomical Journal, 159:75 (12pp), 2020 February Morello et al.
+
+
+Pascale, E., Bezawada, N., Barstow, J., et al. 2018, Proc. SPIE, 10698, 106980H Rauer, H., Catala, C., Aerts, C., et al. 2014, ExA, 38, 249 Reeve, D. C., & Howarth, I. D. 2016, MNRAS, 456, 1294 Reinhold, T., Cameron, R. H., & Gizon, L. 2017, A&A, 603, A52 Ricker, G. R., Winn, J. N., Vanderspek, R., et al. 2014, Proc. SPIE, 9143, 914320 Sarkar, S., Papageorgiou, A., & Pascale, E. 2016, Proc. SPIE, 9904, 99043R Schwarzschild, K. 1906, NWGot, 195, 43 Seager, S., & Mallén-Ornelas, G. 2003, ApJ, 585, 1038
+Shporer, A. 2017, PASP, 129, 072001 Sing, D. K. 2010, A&A, 510, A21 Sing, D. K., Fortney, J. J., Nikolov, N., et al. 2016, Natur, 529, 59 Southworth, J. 2008, MNRAS, 386, 1644 Southworth, J., Maxted, P. F. L., & Smalley, B. 2004, MNRAS, 351, 1277 Tsiaras, A., Waldmann, I. P., Rocchetto, M., et al. 2016, ApJ, 832, 202 Tsiaras, A., Waldmann, I. P., Zingales, T., et al. 2018, AJ, 155, 156 Wittkowski, M., Aufdenberg, J. P., & Kervella, P. 2004, A&A, 413, 711 Zellem, R. T., Swain, M. R., Roudier, G., et al. 2017, ApJ, 844, 27
+12
+The Astronomical Journal, 159:75 (12pp), 2020 February Morello et al.

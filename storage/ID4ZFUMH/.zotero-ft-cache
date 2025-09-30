@@ -1,0 +1,535 @@
+Draft version October 18, 2016
+Preprint typeset using LATEX style emulateapj v. 01/23/15
+A NEW APPROACH TO ANALYSING HST SPATIAL SCANS: THE TRANSMISSION SPECTRUM OF HD 209458 B
+A. Tsiaras1, I. P. Waldmann1, M. Rocchetto1, R. Varley1, G. Morello1, M. Damiano1,2, G. Tinetti1 1Department of Physics & Astronomy, University College London, Gower Street, WC1E6BT London, United Kingdom and
+2INAF–Osservatorio Astronomico di Palermo, Piazza del Parlamento 1, I-90134 Palermo, Italy Draft version October 18, 2016
+ABSTRACT
+The Wide Field Camera 3 (WFC3) on Hubble Space Telescope (HST) is currently one of the most widely used instruments for observing exoplanetary atmospheres, especially with the use of the spatial scanning technique. An increasing number of exoplanets have been studied using this technique as it enables the observation of bright targets without saturating the sensitive detectors. In this work we present a new pipeline for analyzing the data obtained with the spatial scanning technique, starting from the raw data provided by the instrument. In addition to commonly used correction techniques, we take into account the geometric distortions of the instrument, whose impact may become important when combined to the scanning process. Our approach can improve the photometric precision for existing data and also push further the limits of the spatial scanning technique, as it allows the analysis of even longer spatial scans. As an application of our method and pipeline, we present the results from a reanalysis of the spatially scanned transit spectrum of HD 209458 b. We calculate the transit depth per wavelength channel with an average relative uncertainty of 40 ppm. We interpret the final spectrum with T -REx, our fully Bayesian spectral retrieval code, which confirms the presence of water vapor and clouds in the atmosphere of HD 209458 b. The narrow wavelength range limits our ability to disentangle the degeneracies between the fitted atmospheric parameters. Additional data over a broader spectral range are needed to address this issue. Keywords: methods: data analysis — methods: statistical — planets and satellites: atmospheres planets and satellites: individual (HD 209458 b) — techniques: spectroscopic
+1. INTRODUCTION
+Transit light-curves have been proved to be an invaluable tool for determining the bulk and orbital parameters of exoplanets. In addition, observations of transits and eclipses at different wavelengths can reveal the thermal structure and composition of the atmosphere. In transmission spectroscopy, atmospheric opacities absorb/scatter small fractions of the stellar light passing through the planetary limb. This imprints a characteristic, wavelength-dependent, variation on the mean transit depth, transmission spectra are 10–100 ppm in ratio to the radius of the star. Atomic, ionic, molecular and condensate signatures from exoplanetary atmospheres have been identified both with ground-based and space-based instruments (e.g. Charbonneau et al. 2002; Vidal-Madjar et al. 2003; Redfield et al. 2008; Snellen et al. 2008; Swain et al. 2009a,b; Linsky et al. 2010; Swain et al. 2010; Tinetti et al. 2010; Crouzet et al. 2012; Majeau et al. 2012; Waldmann et al. 2012; Todorov et al. 2013; Waldmann et al. 2013; Danielski et al. 2014; Snellen et al. 2014; Sing et al. 2016). A recent addition to the capabilities of HST is the spatial scanning technique, which allows the sensitive infrared detector of WFC3 to observe bright targets. During a spatial scanning exposure the instrument slews slowly along the cross-dispersion direction instead of staring at the target. As a result, the total number of photons collected is much larger, increasing the signal-tonoise ratio (S/N), without the risk of saturation. This observational strategy has already been successfully used
+angelos.tsiaras.14@ucl.ac.uk
+to provide an increasing number of exoplanetary spectra (e.g. Deming et al. 2013; McCullough et al. 2014; Crouzet et al. 2014; Fraine et al. 2014; Knutson et al. 2014a,b; Kreidberg et al. 2014a,b; Stevenson et al. 2014; Kreidberg et al. 2015; Tsiaras et al. 2016; Line et al. 2016). The standard HST pipeline, CalWF31, and the spectroscopic package aXe2 can reduce the HST staring-mode spectroscopic images and extract the 1D spectra from them respectively. By contrast, scanning-mode spectroscopic images have a much more complicated structure that can be described, to the zeroth-order approximation, as the superposition of many staring-mode images, each one slightly shifted along the vertical axis. Due to this structure, only an intermediate product of the CalWF3 package (ima images) is valid when applied to scanning-mode data sets. In addition, the calibration/extraction routines included in the aXe package cannot be applied to spatially scanned spectra. In the literature, analyses of data sets obtained in scanning-mode include custom routines to further reduce the ima images and extract the calibrated 1D spectra from them. In this work we present a stand-alone, dedicated pipeline, able to produce 1D spectra from the raw scanning-mode spectroscopic images. In addition, because of geometrical distortions, the shifted staring-mode spectra that construct each spatially scanned spectrum are not identical to each other (Section 2.2), a behavior that was either partially or not taken into account in previous analyses. Our pipeline uses a new method
+1 http://www.stsci.edu/hst/wfc3/pipeline/wfc3_pipeline 2 http://axe-info.stsci.edu/
+arXiv:1511.07796v3 [astro-ph.EP] 15 Oct 2016
+
+
+2
+Table 1
+HD 209458 system information
+Stellar parameters H (mag) a 6.591 ± 0.011 J (mag) a 6.366 ± 0.035 K (mag) a 6.308 ± 0.021 Teff (K) b 6065 ± 50 [Fe/H] (dex) b 0.00 ± 0.05 M∗ (M ) b 1.119 ± 0.033 R∗ (R ) b 1.155 ± 0.016 log(g∗) (cgs) b 4.361 ± 0.008
+Planetary parameters Teq (K) b 1449 ± 12 Mp (MJup) b 0.685 ± 0.015 Rp (RJup) b 1.359 ± 0.019 a (AU) b 0.04707 ± 0.00047
+Transit parameters T0 (HJD) c 2452826.628521 ± 0.000087 Period (days) c 3.52474859 ± 0.00000038 Depth b∗ 0.014607 ± 0.000024 T14 (min) b∗ 183.9 ± 1.1 b b 0.5070 ± 005 Rp/R∗ b 0.12086 ± 0.00010 a/R∗ b 8.76 ± 0.04 i (deg) b 86.71 ± 0.05
+a Cutri et al. (2003) b Torres et al. (2008), (b∗ derived) c Knutson et al. (2007)
+to calibrate and extract the 1D spectra (Sections 2.3 to 2.5), eliminating possible issues caused by the scanning process. Adopting such an approach allows the efficient analysis of even longer scans, extending the capabilities of the spatial scanning technique. As an application, we use our new pipeline to reanalyze the HST/WFC3 scanning-mode spectroscopic images of the transit of HD 209458 b (Deming et al. 2013). HD 209458 b is the very first transiting exoplanet detected (Charbonneau et al. 2000) and consequently, the first studied with the transit (Charbonneau et al. 2002) and eclipse (Deming et al. 2005) spectroscopic methods. Its system parameters can be found in Table 1. In terms of composition, transit measurements from space and ground have confirmed the presence of sodium in the atmosphere of HD 209458 b (Charbonneau et al. 2002; Snellen et al. 2008; Sing et al. 2008). Other UV observations suggested that the planetary atmosphere is in hydrodynamic escape (e.g. Vidal-Madjar et al. 2003; Holmstr ̈om et al. 2008; Ben-Jaffel & Sona Hosseini 2010; Linsky et al. 2010). At longer wavelengths, where molecular signatures are stronger, water vapour has been identified by a number of measurements and teams (e.g. Barman 2007; Beaulieu et al. 2010; Deming et al. 2013). Carbon monoxide has also been detected (Snellen et al. 2010) while more carbon species, such as methane and carbon dioxide, have been suggested (Swain et al. 2009b; Madhusudhan & Seager 2009; Line et al. 2016). In addition, the thermal properties of the planet have been investigated by a number of teams (e.g. Burrows et al. 2007; Knutson et al. 2008; Griffith 2014; Line et al. 2014;
+Zellem et al. 2014; Schwarz et al. 2015; Evans et al. 2015). In this paper, we use a range of different methods to de-trend the extracted light-curves from the instrumental systematics (Sections 3.1 and 3.2) and calculate the transit depth as a function of wavelength. The final spectrum is modeled using the fully Bayesian retrieval framework T -REx described in Waldmann et al. (2015a,b), based on the Tau code by Hollis et al. (2013), and using custom generated cross sections based on the line lists from ExoMol (Yurchenko & Tennyson 2014), HITRAN (Rothman et al. 2009, 2013) and HITEMP (Rothman et al. 2010) (Section 4).
+2. DATA ANALYSIS
+2.1. Observations - Raw data reduction
+For our analysis we downloaded the spatially scanned spectroscopic images of HD 209458 b (ID: 12181, PI: Drake Deming) from the MAST Archive 3. More specifically, these images are the result of a single visit of the target (containing six HST orbits) using the infrared (IR) detector, the G141 grism and a scan rate of 0′′.9 s−1. Each image consists of 5 non-destructive reads with a size of 266 × 266 pixels in the SPARS10 mode, resulting in a total exposure time of 22.32 s, a maximum signal level of 4.8 × 104 e− per pixel and a total scan length of about 170 pixels (0′′.121091 per pixel). In addition, the data set contains, for calibration purposes, an undispersed (direct) image of the target with the F139M filter. Our reduction process begins with the raw images, which have not been processed by the standard HST pipeline, CalWF3. For this reason we have to apply the basic reduction steps explained in the WFC3 Data Handbook (Rajan & et al. 2011, pp. 55-62) and the WFC3 IR Grism Data Reduction Cookbook 4 (pp. 16–17). These steps are listed below, and the corresponding CalWF3 routines are stated in brackets. Compared to CalWF3, we have modified only the routines that are not suitable for spatially scanned spectroscopic images and also have added the sky background subtraction.
+Bias-level and zero-read corrections (ZSIGCORR - BLEVCORR - ZOFFCORR) — These initial steps are necessary due to the nature of the images, which consist of a number of non-destructive reads, also known as up-the-ramp samples. Our routine follows the implementation of CalWF3, beginning with calculating the zero-read flux (fz). The WFC3 detector lacks a shutter and, as a result, the pixels are collecting photons before the exposure starts. The first non-destructive read of the detector is a reference for all the consecutive ones and it is referred to as the zero-read. fz is the illumination recorded in the zero-read, and is important for the non-linearity correction described later. It is calculated by subtracting from the zero-read the super-zero-read frame included in the u1k1727mi lin.fits calibration file (Hilbert 2014), and stored in memory. After the calculation of the zero-read flux, the value of reference pixels, located at the beginning and end of each row, are subtracted from each non-destructive read. The reference pixels are not sensitive to incoming light
+3 https://archive.stsci.edu/ 4 http://www.stsci.edu/hst/wfc3/documents/WFC3_aXe_ cookbook.pdf
+
+
+3
+and subtracting them eliminates the 1/f noise between the non-destructive reads. Finally, the zero-read is subtracted from all the consecutive non-destructive reads, as it is the reference level.
+Non-linearity correction (NLINCORR) — The IR detector of the WFC3 camera is known to perform non-linearly with flux, following the equation:
+Fc(f ) = (1 + c1 + c2f + c3f 2 + c4f 3)f (1)
+where Fc the collected flux, f is the recorded flux, and cn are the non-linearity coefficients provided in the u1k1727mi lin.fits calibration file.
+This correction is based on the absolute flux in a pixel, and not the difference from the zero-read. Hence, the zero-read flux has to be taken into account. In CalWF3 the amount of flux in the zero-read (fz) is added to each non-destructive read (fr) before the correction and subtracted after, so that: Ffinal = Fc(fr + fz) − fz. In scanning-mode images, pixels with large zero-read fluxes are very common (very bright targets), and for those pixels Ffinal is overestimated. To avoid this additional flux we also correct fz before subtracting, so that: Ffinal = Fc(fr + fz) − Fc(fz). For pixels where fz is close
+to the saturation limit (70,000 e−), the difference is of the order of 1,000 e−.
+Dark current subtraction (DARKCORR) — The dark current in the WFC3/IR detector is non-linear with time and also depends on the sub-array mode and the sampling process. In agreement with CalWF3, we select from the provided super-dark files (Dulude et al. 2014) the one that matches with the data set and subtract the respective dark current frame from each non-destructive read.
+Gain variations correction (FLATCORR) — At this step DN units are converted to electrons, in the same way as in CalWF3, while taking into account the gain variations between the four quadrants. Each non-destructive read is divided by the pixel flat-field frame included in the u4m1335mi pfl.fits calibration file, and multiplied by the mean gain of the four amplifiers (mean gain = 2.35 e−DN−1).
+Sky background subtraction — The sky background subtraction is not included in CalWF3. According to the WFC3 IR Grism Data Reduction Cookbook (pp. 16–17), the master-sky frame included in the WFC3.IR.G141.sky.V1.0.fits calibration file (Ku ̈mmel et al. 2011) has to be scaled and subtracted from the images prior to applying the wavelength-dependent flatfield (Section 2.4). This is a relative sky background template, which takes into account the variations of the sky background across the detector. The scaling factor is calculated from dividing the least illuminated area of the image by the master-sky frame. For the case of HD 209458 b, we use an area on the left side of the spectrum. We avoid both the top and the bottom of the image due to the extended wings of the spectrum and a staring-like “ghost” spectrum, respectively. The later is, possibly, the result of persistence from previous observations.
+Bad pixels and cosmic rays correction (CRCORR) — The final step in our reduction process is the correction of
+1.1 1.2 1.3 1.4 1.5 1.6
+λ (μm)
+1.40
+1.42
+1.44
+1.46
+1.48
+1.50
+1.52
+(Rp/R ∗ )2 (%)
+flat non linearity sky dark bad pixels − cosmic rays gain
+Figure 1. The HD 209458 b spectrum when switching off each reduction step, as indicated in the legend. For this data set, the reduction steps with the stronger effect are the flat-field (described in Section 2.4.3), the bad pixels/cosmic rays, and the non-linearity corrections. The first two, are introducing strong scatter, while the third one is shifting and distorting the shape of the spectrum.
+bad pixels and cosmic rays. Bad pixels have been identified during the calibration cycles and stored in the calibration file y711520di bpx.fits (Hilbert 2012). On the contrary, cosmic rays are randomly positioned on the detector and have to be identified in each image, independently. The cosmic rays detection and correction routine included in CalWF3 is based on the assumption that the flux in each pixel increases linearly with time. This behavior is expected for a static source but not for a moving one and, consequently, the above assumption is not valid for scanning-mode data sets. To identify cosmic rays we calculate two flags for each pixel; the difference from the average of the four horizontally neighboring pixels (xflag) and the difference from the average of the four vertically neighboring pixels (y-flag). If a pixel’s x-flag is 5σ larger than the other pixels in the column and it’s y-flag 5σ larger than the other pixels in the row it is identified as a cosmic ray. In this way we take into account the structure of the spatially scanned spectrum along both axes. We correct both the bad pixels (apart from the “blobs”, that are not single pixels) and the cosmic rays by performing a 2D interpolation of the scientific image excluding those pixels and then filling the gaps with the values of the interpolated function. We have to note here that, in CalWF3, the CRCORR step is applied before the FLATCORR step but we choose to apply our routine at the end, to avoid propagating the interpolation uncertainties. In our pipeline, there is the option of omitting any of the above reduction steps, and so, evaluating the effect of each one on the final spectrum. For HD 209458 b, we extracted the planetary spectrum (as described in the following sections) for cases where each reduction step is omitted, apart from the initial bias-level and zero-read corrections. Figure 1 shows the results, where we can see that the flat-field (described in Section 2.4.3), the bad pixels/cosmic rays, and the non-linearity corrections the have the stronger effects. However, these results are expected to vary between data sets, depending on the specific characteristics of each data set.
+
+
+4
+2.2. Structure of the spatially scanned spectra and extraction challenges
+A spatially scanned spectrum can be described as the superposition of many staring-mode spectra (“building blocks”), each one slightly shifted along the vertical axis of the detector. The most common approach to produce 1D spectra from 2D spatially scanned ones, is to sum along the detector columns. However, the “building blocks” of a spatially scanned spectrum are neither identical to each other nor parallel to the detector rows, because:
+1. there are significant dispersion variations along the vertical axis of the WFC3/IR detector (from about 4.47 to 4.78 nm/pix), caused by the 24 degrees tilt about its horizontal axis,
+2. the 1st order spectrum of the G141 grism, that is used, is inclined by 0.5 degrees with respect to the WFC3/IR detector rows,
+as described in the WFC3 Instrument Handbook (Dressel 2012, pp. 173–174). Because of the dispersion variations, the wavelength associated to a detector column is increasing towards its upper part. In the case of HD 209458 b (scan length of 170 pixels), for a column at 1.2 μm, the wavelength difference between the lower and the upper edge of the spatially scanned spectrum is 30  ̊A, while at 1.6 μm the difference is 70  ̊A. These values correspond to 0.6 and 1.5 pixels, respectively. As a result, 1D spectra resulting from summing along the columns of the detector vary by up to 1% between an intermediate scan of 60 pixels and the final scan of 170 pixels. For longer scans, such as 55 Cancri e (Tsiaras et al. 2016, 340 pixels), the effect is stronger and the discrepancy can be more that 2% (Section 2.5). An effort to correct for dispersion variations has been made by Kreidberg et al. (2014b) with a rowby-row interpolation which rearranges the flux in each row to create a uniformly repeated spectrum along the scanning direction. Although this is a possible approach it may restrict the achievable precision level because the dispersion direction is inclined by 0.5 degrees and, therefore, the “building blocks” of the spatially scanning spectrum are not parallel to the detector rows. Moreover, the inclined spectrum affects the wavelength calibration, as the wavelength solutions depend on the position of a pixel along the trace — i.e. the curve on which the spectrum lies — and not along the x-axis of the detector (see aXe User Manual version 2.3 5, pp. 7677). The effect of summing along the columns in the wavelength calibration is evident in Wilkins et al. (2014), where the authors find an inconsistency between the extracted 1D stellar spectrum and the sensitivity curve the G141 grism (Kuntschner et al. 2009). The empirical adjustment of the calibration coefficients that these authors propose is up to 10%. To take into account the effects described above, we follow a calibration process (Sections 2.3 and 2.4) that monitors how the position of the dispersed photons changes during a scan, and define the wavelength-dependent photon trajectories (w.d.p.t.). We then use them to extract
+5 http://www.stsci.edu/institute/software_hardware/ stsdas/axe/extract_calibrate/axe_manual
+1
+2
+3
+4
+5
+6
+7
+8
+e− ( × 106)
+50 100 150 200
+column (pix)
+−0.8
+−0.6
+−0.4
+−0.2
+0.0
+0.2
+0.4
+0.6
+residuals
+0.5
+1.0
+1.5
+2.0
+2.5
+3.0
+3.5
+4.0
+75 80 85 90
+row (pix)
+−0.4
+−0.3
+−0.2
+−000000......101234
+Figure 2. Left-Top: Normalized sum along the columns of the first (continuous) and the last (dashed, normalized) spatially scanned spectra of the visit. Left-Bottom: Difference between the two profiles before and after shifting, dashed and continuous lines, respectively. Right: same plots for the sum along the rows of the first non-destructive read.
+1D spectra that are both consistent with the structure of the spatially scanned spectra, and agree with the sensitivity curve of the G141 grism (Section 2.5).
+2.3. Position shifts
+While HST guiding system is stable, it fails to reset at exactly the same position as it was before a spatial scanning observation, causing horizontal position shifts of about one pixel over an entire visit (Deming et al. 2013; Kreidberg et al. 2014b; Knutson et al. 2014b; Fraine et al. 2014). To calculate the horizontal shifts we compare the structure of the first spatially scanned spectrum with all subsequent spectra, using the normalised sum along their columns (Figure 2, left), similarly to Kreidberg et al. (2014b). For each consecutive image, i, we interpolate and fit for the horizontal shift, ∆xi, relative to the first one. Note here that the sums used above are corrected for the static (non wavelength-dependent) component of the flat-field, to avoid the bias introduced by its structure. The final values will be used in the following section to define the w.d.p.t., and therefore the left and right edges of the extraction apertures. Horizontal shifts are important as they displace the spectrum on the detector and also introduce additional systematics to the spectral light-curves, such as undersampling (Deming et al. 2013; Wilkins et al. 2014). For this particular data set, we find horizontal shifts of about 0.9 pixel over the visit (top panel in Figure 3). If not taken into account, such shifts introduce variations of up to 250 ppm in the planetary spectrum. In addition, shifts of the vertical position from which the scan starts (∆yi) are calculated from the first nondestructive read of each exposure. We apply the same method as for the horizontal shifts described above, with the difference that here we sum along the rows instead of the columns (Figure 2, right). Finally, we calculate the scan length (li) by fitting an extended Gaussian function on the sum along the rows of the last non-destructive read. The results will be used later to define the upper
+
+
+5
+0.00 0.05 0.10 0.15 0.20 0.25 0.30 0.35
+∆t (days)
+-0.2
+-0.15
+-0.1
+-0.05
+-0.0
+0.05
+∆yi (pix)
+-1.0
+-0.8
+-0.6
+-0.4
+-0.2
+-0.0
+0.2
+∆xi (pix)
+Figure 3. Horizontal (top) and vertical (bottom) shift for each image of the visit, relative to the first one.
+and lower edges of the extraction apertures. For this observation, both vertical shifts (0.2 pixel over the visit, bottom panel in Figure 3) and length variations (li = 164.688 ± 0.017 pixels over the visit) are not significant enough to affect the final planetary spectrum.
+2.4. Wavelength calibration
+2.4.1. Position of the star
+The key information for calibrating a WFC3/G141 spectrum is the physical position of the star (x∗, y∗) on the full detector array (Kuntschner et al. 2009). For this purpose, every spectrum should be accompanied by an undispersed (direct) image of the star, taken with the filter F140W. In the case of spatially scanned spectra, the vertical position (y∗) is not constant and so it cannot be determined from the direct image. In contrast, the horizontal position (x∗) is given by the equation:
+x∗ = x0 + (507 − 0.5L) + ∆xoff + ∆xref (2)
+where x0 is the result of fitting a 2D Gaussian function to the direct image, L is the size of the direct image array, 507 − 0.5L is the difference between the coordinate systems of the sub-array used for the direct image and the full detector array (this correction gives the absolute position on the detector, and the number 507 is used because the calibration coefficients do not take into account the reference pixels), ∆xoff is the difference in the centroid offsets along the x-axis between the filter used for the direct image and the filter F140W, and ∆xref is the difference in the chip reference pixels between the WFC3 aperture used for the direct image and the WFC3 aperture used for the dispersed image. Details and tables of values for each one of the above correction parameters can be found in Appendix A. For HD 209458 b, these values are (in pixels): x0 = 137.5 (for the first scan), L = 256 (sub-array used: SQ256SUB), ∆xoff = 0.027 (filter used: F139M), ∆xref = −107 (WFC3 apertures used: direct image: IRSUB256, spatial scans: GRISM256) The limited observational time in each HST visit allows the observers to include only one undispersed image, at the beginning of each visit. With this image we can calculate the x∗ that corresponds to the first scan (x1∗), but,
+0 50 100 150 200 250
+0
+50
+100
+150
+200
+250
+66 68 70 72 74
+0
+50
+100
+150
+200
+250
+191 193 195 197 199
+column (pix)
+row (pix)
+Figure 4. Top: Position of the dispersed photons with different wavelengths (colored points) as the star moves along its scanning trajectory (white arrow). Bottom: Left and right edges of the spectrum where we can appreciate how accurately the grid follows the data.
+for any subsequent scan, we have to use the horizontal shifts calculated in the previous section:
+x∗
+i = x∗
+1 + ∆xi (3)
+2.4.2. Calculating the wavelength-dependent photon trajectories (w.d.p.t.)
+As described in the aXe User Manual version 2.3 (pp. 76-77), the trace of a staring-mode spectrum on the detector is:
+y − y∗ = at(x − x∗) + bt (4)
+where
+at
+}{{}
+or DYDX A 1
+=
+{at0 + at1x∗ + at2y∗+
+at3x∗2 + at4x∗y∗ + at5y∗2
+bt
+}{{}
+or DYDX A 0
+= bt0 + bt1x∗ + bt2y∗
+and the wavelength solution is:
+λ = awd + bw (5)
+where
+aw
+}{{}
+or DLDP A 1
+=
+{aw0 + aw1x∗ + aw2y∗+
+aw3x∗2 + aw4x∗y∗ + aw5y∗2
+bw
+}{{}
+or DLDP A 0
+= bw0 + bw1x∗ + bw2y∗
+and (x∗, y∗) is the physical position of the star on the full detector array, d is the distance from the source along the trace and (atn, btn, awn, bwn) are the HST calibration coefficients included in the configuration file WFC3.IR.G141.V2.5.conf (Kuntschner et al. 2009, Appendix B). In the case of spatially scanned spectra, the star is moving on the detector. We track the changes in the positions of the dispersed photons during each scan and define the w.d.p.t. by following these steps:
+
+
+6
+1.1 1.3 1.5 1.7 1.9
+λ (μm)
+2.0
+2.5
+3.0
+3.5
+4.0
+4.5
+offset ( × 104)
+offset = c1
+c2 + λ + c3
+1.1 1.3 1.5 1.7 1.9
+λ (μm)
+-9.0
+-8.0
+-7.0
+-6.0
+-5.0
+-4.0
+-3.0
+-2.0
+-1.0
+0.0
+slope ( × 102)
+slope = s1
+s2 + λ + s3
+Figure 5. The offset and slope of the wavelength-dependent photon trajectories (w.d.p.t.) as functions of wavelength.
+• work out the position of the dispersed photons on the main trace (xλ, yλ) as function of y∗ and wavelength (λ), using equations 4 and 5 (for the proof of the following equations see Appendix B) :
+xλ = x∗ − atbt
+1 + at2
++ λ − bw
+aw
+cos[tan−1(at)]
+yλ = at(xλ − x∗) + bt + y∗
+(6)
+• assume x∗ to be constant during a scan, but different from one scan to another (x∗
+i from Equation
+3),
+• let y∗ to vary uniformly across the length of the sub-array, corresponding to the vertical scan,
+• let λ to vary uniformly from 1 to 1.8  ̊A, covering the whole response range of the G141 grism,
+• from all the (y∗, λ) pairs, use equations 6 to create a large grid of (λ, xλ, yλ) points (Figure 4),
+• fit on the grid points the function of the w.d.p.t.:
+yλ = ( c1
+c2 + λ + c3) + ( s1
+s2 + λ + s3)xλ (7)
+For a given wavelength, equation 7 represents a straight line across the detector, the line on which the photons of this particular wavelength move during the scan. In figure 5, the offset and slope of these lines are plotted as functions of wavelength.
+2.4.3. Wavelength-dependent flat-field
+We use the wavelength grid created in the previous section also to apply the wavelength-dependent flat-field, as described in the aXe User Manual version 2.3. We can find the wavelength as a function of position by fitting a different two-dimensional function on the grid points:
+λ = κ0 + κ1xλ + κ2yλ + κ3x2
+λ + κ4xλyλ + κ5y2
+λ (8)
+The wavelength-dependent flat-field for each pixel (x, y), is then:
+F (x, y) =
+i=3
+∑
+i=0
+Fi(x, y)
+( λ(x, y) − λmin
+λmax − λmin
+)i
+(9)
+0 50 100 150 200 250
+column (pix)
+0
+50
+100
+150
+200
+250
+row (pix)
+Figure 6. Photometric apertures for the different wavelength channels and the area (red square) from which the sky background ratio is estimated.
+where Fi are the different extension arrays and λmin, λmax, the wavelength coefficients provided in the flat-field cube WFC3.IR.G141.flat.2.fits (Kuntschner et al. 2011).
+2.5. Extraction of 1D spectra
+The 1D spectra are extracted from apertures of quadrangular shape, specifically calculated for each wavelength bin (λ1 − λ2) per frame (Figure 6). The left and right edges of each quadrilateral are given by the w.d.p.t. (Equation 7) for λ = λ1 and λ = λ2, respectively. The upper and lower edges are given by the spectrum trace (Equation 4) for y∗ = y1 +∆yi and y∗ = y1 +∆yi +li +y2 , respectively. ∆yi is the vertical position shift and li is the scan length of each spatially scanned spectrum, as calculated in Section 2.3. The values for y1 and y2 are chosen in order to correspond to 15 pixels below and 7 pixels above the spatially scanned spectrum (for this dataset y1 = 442.5 and y2 = 7, pixels). An issue concerning the extraction method, is that we have to take into account fractional pixels at the edges of the photometric apertures. As a first approximation we used the fraction of the pixel area inside the extraction aperture. While testing this method, we concluded that this approach intensifies the wavelength-dependent systematics that are caused be the horizontal shifts and the low spectral resolution of the spectrum (Section 3.2). A better approach for those pixels is a second-order 2D polynomial distribution of the flux. The coefficients of this 2D function are calculated analytically so that its integral inside the pixel of interest and inside each surrounding pixel, are equal to their flux levels. We can then calculate the analytic integral of this function inside the common area of the pixel that we want to split and the extraction aperture. Overall, by taking into account simultaneously the geometrical distortions (dispersion variations across the scanning direction and inclined spectrum) and the positional shifts (horizontal and vertical), our calibration and extraction pipeline has two main advantages:
+1. the photometric apertures are consistent with the geometric structure of the spatially scanned spec
+
+
+7
+1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8
+λ (μm)
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+e − ( × 106)
+Paschen β
+PHOENIX model HST coeff. Wilkins et al. (2014) coeff.
+Figure 7. Extracted 1D spectrum using our method with the HST calibration coefficients (red), and those proposed by Wilkins et al. (2014) (blue). For comparison, the PHOENIX model of the host star scaled by sensitivity curve of the G141 grism (black), and the position of the Paschen β line.
+tra across the detector, improving the consistency between short and long scans by three times, compared to summing along the columns (Figure 8),
+2. the extracted 1D spectra are consistent with the sensitivity curve of the G141 grism (Figure 7), suggesting that there is no need to change the HST calibration coefficients (used in equations 4 and 5), as proposed by Wilkins et al. (2014).
+We will make the complete for reduction, calibration and extraction, available to the community in the near future. Meanwhile, all our intermediate results (reduced data and light-curves) are available for direct comparisons with other methods6.
+3. LIGHT-CURVE ANALYSIS
+3.1. Fitting the white light-curve
+Having extracted the 1D spectra from all the frames we produce the white and spectral light-curves. It is known from previous studies of observations with WFC3 in staring-mode (Berta et al. 2012; Swain et al. 2013; Wilkins et al. 2014) and scanning mode (Deming et al. 2013; Kreidberg et al. 2014b; Knutson et al. 2014a) that the infrared detector introduces two time-dependent systematics to the light-curves of bright sources like HD 209458: one long-term (throughout the visit) with an approximately linear behavior and one short-term (throughout each HST orbit) with an approximately exponential behavior. These systematics are commonly referred to as the “ramps”, and can be easily seen in the raw white light-curve (Figure 9) but are also present in the light-curves of all wavelength channels. In this data set, the long-term ramp can be approximated by a linear function only after the third orbit. We do not include the first two orbits in our analysis as a wrong fitting of the behavior of the instrument would introduce uncertainties to the final values of the transit parameters.
+6 http://zuserver2.star.ucl.ac.uk/~atsiaras/wfc3/
+−3
+−2
+−1
+0
+1
+2
+3
+HD 209548 b, 170 − 60 pixels
+This work (quadrilaterals) Literature (columns)
+1.2 1.3 1.4 1.5 1.6
+λ (μm)
+−3
+−2
+−1
+0
+1
+2
+3
+55 Cancri e, 340 − 40 pixels
+% ∆Fshort − long
+Figure 8. Percentage difference between the flux rate extracted from a short, intermediate, scan and the long, final, scan of the same exposure, using our method (red) and the sum along the columns (blue). At the top, the case of HD 209458 b, studied in this work, and at the bottom, the case of 55 Cancri e (Tsiaras et al. 2016), a much longer scan. In both cases, our method gives three times better rms.
+To correct these systematics we fit a transit model, F (t), multiplied by a normalisation factor, nw, and an instrumental systematics function, R(t), (Kreidberg et al. 2014b,a; Stevenson et al. 2014; Kreidberg et al. 2015):
+R(t) = (1 − ra(t − T0))(1 − rb1e−rb2(t−to)) (10)
+where t is time, T0 is the mid-transit time, to is the time when each orbit starts, ra is the slope of the linear, longterm “ramp” and (rb1, rb2) are the coefficients of the exponential short-term “ramp”. For the transit part of the light-curve, we use our numerical model, which is written entirely in Python7. It returns the relative flux, F (t), as a function of the limb darkening coefficients, an, the Rp/R∗ ratio and all the orbital parameters (T0, P, i, a/R∗, e, ω), based on the nonlinear limb darkening model (Claret 2000) for the host star:
+I(an, r) = 1 −
+n=4
+∑
+n=1
+an(1 − (1 − r2)n/4) (11)
+We calculate the limb darkening coefficients by fitting an ATLAS model (Kurucz 1970; Howarth 2011; Espinoza & Jord ́an 2015). The ATLAS model is created using the stellar parameters in Table 1 and the sensitivity curve of the G141 grism, between 1.125 and 1.65 μm (Table 2). We use a circular orbit and fix inclination and a/R∗ ratio to the values of Table 1. Pre-selecting the values for the limb darkening coefficients and the orbital parameters is necessary, as the asymmetry in the light-curve (Figure 9) does not allow us to constrain them from the data. As we can see at the bottom panel of figure 10, the residuals do not follow a Gaussian distribution at the transit egress. This behavior could be due to either nonoptimal values used for the inclination and a/R∗ ratio or remaining systematics. For this reason we re-scale the uncertainties of the data points to the rms of the residuals and fit the light curve again. This increases the initial
+7 https://github.com/ucl-exoplanets/pylightcurve
+
+
+8
+8.10
+8.12
+8.14
+8.16
+8.18
+8.20
+8.22
+8.24
+8.26
+e− ( × 108)
+0.00 0.05 0.10 0.15 0.20 0.25 0.30 0.35
+∆t (days)
+4.5
+5.0
+5.5
+6.0
+6.5
+sky ratio
+Figure 9. Raw white light-curve and sky background relatively to the master sky frame.
+Table 2
+White light-curve fitting results.
+Limb darkening coefficients (1.125 - 1.650 μm) a1 0.608377 a2 −0.206186 a3 0.262367 a4 −0.133129
+Fitted transit parameters T0 (HJD) 2456196.28836 ± 0.00005 Rp/R∗ 0.12079 ± 0.00014
+uncertainties approximately by three times. The fitting results and the final uncertainties can be found in Table 2. To verify the resulting spectrum and also reduce the uncertainties down to the noise floor and the residual error limit, a second measurement of the spectrum, time shifted to completing the phase coverage, would be required. The correlations between the fitted parameters are shown in Figure 11. We find no correlation between the Rp/R∗ ratio and any of the “ramp” parameters, while nw, ra and T0 are correlated with each other. These correlations are introduced by the asymmetry in the lightcurve, as there is no constrain for the time of ingress. We do not find such correlations in the case of simulated symmetric light-curves.
+3.2. Fitting the spectral light-curves
+The wavelength bins are selected in such a way that: a) the total flux is equally distributed among the bins, to have an approximately uniform S/N and b) we avoid splitting the spectrum an wavelengths where the stellar spectrum has significant variations (1.165, 1.282, 1.372, and 1.502 μm). We calculate the limb darkening coefficients for each spectral light-curve using the ATLAS model, the stellar parameters in Table 1 and the sensitivity curve of the G141 grism inside the boundaries of each wavelength bin. To extract the planetary spectrum from the spectral light-curves, we follow two approaches similar to those described in Kreidberg et al. (2014b): a) we fit each
+0.99
+0.995
+1.0
+1.005
+1.01
+norm. flux
+0.984
+0.989
+0.994
+0.999
+1.004
+norm. flux
+−0.04 −0.03 −0.02 −0.01 0.00 0.01 0.02 0.03 0.04
+phase
+-250.0
+-150.0
+-50.0
+50.0
+150.0
+250.0
+residuals (ppm)
+Figure 10. Top: Normalized raw white light-curve. Middle: white light-curve divided by the best-fit model for the systematics. Bottom: Fitting residuals, where we can see that the model fails to fit the egress. The most possible reasons for this behavior are either non-optimal orbital parameters, limb darkening coefficients or remaining systematics.
+nw
+ra
+rb1
+rb2
+Rp/R ∗
+T0
+Figure 11. Correlations between the fitted systematics and transit parameters for the simultaneous fitting approach on all the data points. Apart from the expected correlation with the normalization factor, Rp/R∗ ratio is not correlated with any of the three parameters that describe the systematics. On the contrary, nw, ra and T0 are correlated with each other, due to the asymmetric distribution of the data points around T0.
+spectral light-curve in the same way as the white one — i.e. fitting a wavelength-dependent normalisation factor, nλ, a wavelength-dependent instrumental systematics function, R(λ, t), and a wavelength-dependent transit model, F (λ, t) — (method 1) and b) we divide each spectral light-curve by the white one and then fit for a wavelength-dependent normalisation factor, nλ, a wavelength-dependent linear slope, linear with time, 1+χλ(t−T0), and a wavelength-dependent relative tran
+
+
+9
+sit model, F (λ, t)/Fw(t), (method 2):
+method 1: nλR(λ, t)F (λ, t)
+method 2: nλ(1 + χλ(t − T0))(F (λ, t)/Fw(t)) (12)
+where t is time, T0 is the mid-transit time from Table 2, χλ is the coefficient of the wavelength-dependent linear slope, and Fw(t) is the best-fit model on the white light-curve (Section 3.1). In all the F (λ, t) models, the only free parameter is the Rp/R∗ ratio, while the other parameters are the same as in the white light-curve. Concerning the uncertainties, we re-scale the uncertainties of the data points to the rms of the residuals and fit again, in the same way as for the white light-curve.
+4. ATMOSPERIC RETRIEVAL
+We used the nested sampling algorithm implemented in T -REx (Waldmann et al. 2015a,b) to fully explore the parameter space and find the best fit to the WFC3 spectrum. Because of the limited number of data points in the observed spectrum, in order to significantly reduce the parameter space we parametrise the atmosphere assuming an isothermal profile, with constant molecular abundances as a function of altitude. The fitted parameters are the temperature, the molecular abundances for the different species, the mean molecular weight, the radius at 10 bar, and the cloud top pressure — i.e. the pressure at which the cloud starts to be opaque. The cloud model used assumes an opaque and uniformly distributed cloud deck defined at a given pressure beyond which electromagnetic radiation is blocked at all wavelengths. We consider a broad range of absorbing molecules, including H2O, HCN, NH3, CH4, CO2, CO, NO, SiO, TiO, VO, H2S, C2H2. We fit for the individual molecular abundances, assuming the bulk composition of the atmosphere to be made by a mixture of 85% hydrogen and 15% helium. We then couple the mean molecular weight to the atmospheric composition. We consider uniform priors for the molecular volume mixing ratios ranging between 10−12 and 10−2. This prior is justified by the fact that in hot Jupiters the absolute abundances of absorbing gases are significantly smaller compared to the H2O and He content. We also assume uniform priors for the temperature (T = 1000 − 1800 K), 10 bar radius (R = 1.3 − 1.4 RJup) and cloud top pressure (Pcloud = 10−5 − 10−1 Pa). We run two retrievals, the first one including 12 molecules and aimed at identifying the most likely trace gases, and the second one including only the molecules identified in the first run, aimed at fully mapping the parameter space and at investigating the degeneracy of the model.
+5. RESULTS
+The limb darkening coefficients, a1−4, fitted on the ATLAS model, and the final measurements of the transit depth, (Rp/R∗)2, as a function of wavelength, λ, are presented in Figure 12. The results from the two methods agree within 3 ppm, while the uncertainties are of the level of 40 ppm. However, the uncertainties in method 2 are improved by 10% compared to method 1. Method 2 performs better because the “ramp” model, used in method 1, cannot reproduce perfectly the real systematics. We therefore use the results from method 2 (Table 3) in the spectral retrieval.
+1.44
+1.45
+1.46
+1.47
+1.48
+1.49
+(Rp/R ∗ )2 (%)
+Deming et al. (2013) method 1 method 2
+1.1 1.2 1.3 1.4 1.5 1.6 1.7
+λ (μm)
+−0.6
+−0.4
+−0.2
+0.0
+0.2
+0.4
+0.6 a1 a2 a3 a4
+Figure 12. Top: Comparison between the extracted spectra using the two different methods, and the spectrum from Deming et al. (2013). Bottom: Limb darkening coefficients (a1−4) as functions of wavelength.
+We found the slope of the long-term “ramp” to be wavelength-dependent, as well as, the term χλ in model 2. This behaviour supports the hypothesis that while the exponential “ramp” is a common-mode between the white and the spectral-light curve, the linear “ramp” is not, as seen in previous WFC3 observations (e.g. Deming et al. 2013; Fraine et al. 2014; Wilkins et al. 2014; Kreidberg et al. 2015). Figure 12 plots, also, the spectrum obtained by Deming et al. (2013). While the two spectra include the same features, we can see that at longer wavelengths there is a systematic difference. This difference could be caused by the geometric distortions, that are stronger at longer wavelengths, or buy the different way of taking into account the limb darkening coefficients. Figures 13 and 14 show the best fits to the spectrum obtained with T -REx and the posterior distributions of the second spectral retrieval, respectively. The first retrieval including all molecules shows that water is the strongest and most likely absorber, explaining the broad absorption feature at ≈ 1.35 μm. No other molecules seem to contribute to the overall spectrum, while clouds may be present to explain the flat spectrum seen between 1.1 and 1.3 μm. These results are in agreement with the previous analysis of this data set (Deming et al. 2013). We therefore run the second retrieval including only H2O and clouds. Figure 13 shows the best fit to the data corresponding to the maximum a posteriori solution of this Bayesian retrieval, while Figure 14 shows the posterior distributions of this retrieval. We find that the retrieved absolute abundances of H2O is 3×10−6−3×10−4. However, the posterior distributions (Figure 14) shows that this parameter is highly degenerate with the cloud top pressure and the the 10 bar radius. It is therefore impossible with these data alone to constrain the absolute abundances of this absorber.
+We found the 10 bar radius to be 1.36+0.01
+−0.02 RJup. The
+posterior distributions also show that the data can be best explained by a cloud deck at 0.15 bar, but we note that the distribution is very broad (and degenerate with the other fitted parameters), and a solution without
+
+
+10
+Table 3
+Limb darkening coefficients a1−4 and transit depth for the different wavelength channels.
+λ1 − λ2 (μm) a1 a2 a3 a4 (Rp/R∗)2 (ppm) 1.1165 1.1375 0.635743 -0.466435 0.680708 -0.294517 14596 ± 41 1.1375 1.1585 0.627663 -0.444932 0.660394 -0.290206 14547 ± 40 1.1585 1.1790 0.616173 -0.397988 0.58849 -0.25968 14583 ± 40 1.1790 1.1985 0.609875 -0.379926 0.566774 -0.252676 14518 ± 46 1.1985 1.2175 0.606905 -0.369955 0.557771 -0.252625 14570 ± 39 1.2175 1.2365 0.592654 -0.313497 0.494043 -0.230553 14586 ± 40 1.2365 1.2550 0.586298 -0.286056 0.456591 -0.216029 14497 ± 37 1.2550 1.2740 0.582601 -0.259779 0.417679 -0.202415 14511 ± 41 1.2740 1.2930 0.593752 -0.214099 0.304066 -0.163396 14531 ± 42 1.2930 1.3115 0.570891 -0.201033 0.337262 -0.17122 14499 ± 43 1.3115 1.3295 0.573679 -0.201341 0.330334 -0.168801 14493 ± 48 1.3295 1.3480 0.563602 -0.148149 0.256247 -0.138194 14625 ± 40 1.3480 1.3665 0.567258 -0.146917 0.248296 -0.136497 14686 ± 38 1.3665 1.3855 0.567304 -0.123792 0.204782 -0.117829 14714 ± 42 1.3855 1.4050 0.565076 -0.0927791 0.158153 -0.0998947 14724 ± 39 1.4050 1.4245 0.575439 -0.0971152 0.148165 -0.0955357 14634 ± 41 1.4245 1.4445 0.580506 -0.0916465 0.121781 -0.0819971 14618 ± 48 1.4445 1.4650 0.587064 -0.0803535 0.0907723 -0.0687593 14606 ± 40 1.4650 1.4865 0.604201 -0.113934 0.119031 -0.0810911 14609 ± 39 1.4865 1.5090 0.609562 -0.111526 0.0943074 -0.0675727 14629 ± 37 1.5090 1.5315 0.62174 -0.0998157 0.0551344 -0.0490792 14599 ± 42 1.5315 1.5550 0.641863 -0.132576 0.0645796 -0.0474349 14595 ± 37 1.5550 1.5795 0.659312 -0.174048 0.0873337 -0.0501129 14570 ± 35 1.5795 1.6050 0.671289 -0.207513 0.107652 -0.0535945 14529 ± 43 1.6050 1.6320 0.692984 -0.238165 0.111607 -0.0491783 14524 ± 41
+1.1 1.2 1.3 1.4 1.5 1.6 1.7 Wavelength (μm)
+0.0143
+0.0144
+0.0145
+0.0146
+0.0147
+0.0148
+0.0149
+0.0150
+(Rp/R ∗ )2
+Fitted model Observed
+Figure 13. Infrared transmission spectrum of HD209458 b (black error bars), best fit obtained with the second retrieval containing H2O and clouds (blue line). The shaded regions show the the 1 and 2σ confidence intervals in the the retrieved spectrum.
+clouds or with lower-pressure clouds is also acceptable. The first retrieval including all molecules has a global evidence log E = 209, while the second retrieval including H2O only has log E = 210. Despite the global evidence of the H2O-only retrieval being only marginally higher than that of the more complete model, this result shows that there is no statistical evidence that favor the presence of additional molecules in the spectrum. Lastly, we find the atmospheric mean temperature peaking towards the lower edge of the prior. As the prior bounds are justified by the equilibrium temperature of the planet and a reasonable range of possible albedos, this result shows that the current model likely biases the
+log(H2O) = −5. 07+1. 50
+−0. 45
+1200
+1400
+1600
+1800
+T
+T = 1130. 70+218. 11
+−98. 88
+1.24
+1.28
+1.32
+1.36
+Rp
+Rp = 1. 36+0. 01
+−0. 02
+6.0 4.5 3.0
+log(H2O)
+1.5
+3.0
+4.5
+6.0
+Pcld, top
+1200
+1400
+1600
+1800
+T
+1.24 1.28 1.32 1.36
+Rp
+1.5 3.0 4.5 6.0
+Pcld, top
+Pcld, top = 4. 19+0. 88
+−1. 51
+Figure 14. Posterior distributions of the second spectrum retrieval including H2O and clouds.
+retrieved temperature towards lower values.
+6. DISCUSSION AND CONCLUSIONS
+The spatial scanning technique has improved the efficiency of the WFC3 camera compared to the staringmode observations, as it allows longer exposure times for bright targets, minimising the risk of saturating the sen
+
+
+11
+sitive detector. However, unlikely staring spectra, spatially scanned spectra are affected by the field-dependent characteristics of the G141 grism (dispersion variations across the scanning direction and inclined spectrum). In addition, scanning-mode observations include positional shifts (horizontal and vertical) that are an order of magnitude stronger than staring-mode observations. We developed a new pipeline designed to minimise these effects on the spatially scanned spectra, by including alternative calibration and extraction techniques and using a coordinate system along the wavelength/scanning axes instead of the x/y axes of the detector. We found discrepancies up to 1% the flux of the star between scans that differ by 100 pixels in length. Consequently, for scan lengths of this range and beyond, the geometric distortions should be taken into account. We, also, found that the effect becomes stronger as the scan length increases. Our approach ensures the more efficient analysis of scans longer than 100 pixels, and therefore of longer exposure times for bright targets, as demonstrated in Tsiaras et al.
+(2016). As a test case, we reanalysed the spatially scanned spectra during the transit of HD 209458 b. Because of the incomplete phase coverage, we were not able to investigate in more detail the effect of the time-dependent systematics on this data set. To further calibrate and verify the repeatability of the results obtained, a second, time-shifted, observation would be necessary. The interpretation of the final spectrum with our retrieval code T -REx, confirms the presence of water vapour and also suggests the presence of clouds, in agreement with the literature. However, we note that it is not possible to determine the absolute abundances of this gas. To address this issue, additional infrared spectroscopic observations, over a broader wavelength range, are needed.
+This work was supported by STFC (ST/K502406/1) and the ERC projects ExoLights (617119) and ExoMol (267219)
+APPENDIX
+TARGET POSITION
+During the calibration process, as explained in section 2.4, we calculate the physical position of the star on the detector using Equation 2:
+x∗ = x0 + (507 − 0.5L) + ∆xoff + ∆xref
+Here we give the values of all the parameters used in this calculation for all different sub-arrays, filters and apertures, apart from x0 which is the result of fitting a 2D gaussian function to the direct image.
+Table 4
+Lengths of the different sub-arrays.
+array L [pix] array L [pix] FULL 1024 SUB128 128 SUB512 512 SUB64 64 SUB256 256
+Table 5
+Offsets from F140W filter.
+filter xoff [pix] filter xoff [pix] F098W 0.150 F132N 0.039 F140W 0.083 F126N 0.264 F153M 0.146 F167N 0.196 F139M 0.110 F164N 0.169 F127M 0.131 F160W 0.136 F128N 0.026 F125W 0.064 F130N 0.033 F110W -0.073
+Table 6
+Chip reference pixels and pixel scales for the different WFC3 apertures (IR Channel).
+WFC3 apperture xref [pix] xscale [”/pix] IR 562.0 0.135601 IR - G102 & G141 497.0 0.135603 IRSUB64/128/256/512 522.0 0.135470 GRISM1024 - G102 & G141 497.0 0.135603 GRISM1024 497.0 0.135603 GRISM512 - G102 & G141 505.0 0.135504 GRISM512 505.0 0.135504 GRISM256 - G102 & G141 410.0 0.135508 GRISM256 410.0 0.135508 GRISM128/64 - G102 376.0 0.135476 GRISM128/64 - G141 410.0 0.135474 GRISM128/64 496.0 0.135404
+L is the size of the direct image (Table 4) and the correction 507 − 0.5L is needed to transform the calculated x-position from the coordinate system of the sub-array used for the direct image to that of the full detector array. It is a result of the fact that all the sub-arrays have the same centre as the full detector array. We also have to mention that the calibration coefficients do not take into account the reference pixels and so the centre is 507 instead of 512. ∆xoff is the difference in the centroid offsets along the x-axis between the filter used for the direct image and the filter F140W, as calculated by Sabbi et al. (2010) (Table 5). This correction is needed because all the calibration coefficients have been calculated relatively to direct images with the F140W filter. Finally, ∆xref is the difference in the chip reference pixels between the WFC3 aperture used for the direct image and the the aperture used for the dispersed image (Table 6). The reference pixel is the pixel where the given target coordinates are fixed by the telescope. It is usual to have a shift between the other filters and the two grisms, in oder for the spectrum to fit inside the sub-array. This correction also includes any shifts indicated by the observer through the POSTARG1 keyword in the fits file header (converted to pixels). Table 6 contains most of the available apertures, a complete list can be found on the STScI website8.
+8 http://www.stsci.edu/hst/observatory/apertures/wfc3. html
+
+
+12
+(eq. 5)
+(eq. 4)
+Figure 15. Relative positions of the trace (red line), the direct image of the star (x∗, y∗), and a random point on the trace (xλ, yλ).
+Table 7
+Trace and wavelength solution calibration coefficients for the G141 grism (Kuntschner et al. 2009)
+n = 0 n = 1 [x∗] n = 2 [y∗] n = 3 [x∗y∗] n = 4 [x∗2] n = 5 [y∗2] atn 1.04275E-02 -7.96978E-06 -2.49607E-06 1.45963E-09 1.39757E-08 4.8494E-10 btn 1.96882E+00 9.09159E-05 -1.93260E-03 awn 4.51423E+01 3.17239E-04 2.17055E-03 -7.42504E-07 3.48639E-07 3.09213E-07 bwn 8.95431E+03 9.35925E-02
+WAVELENGTH GRID EQUATIONS
+In section 2.4 we use equations 6 to calculate the position of the incoming photons (xλ, yλ) as function of wavelength
+(λ) for a given physical position of the star on the full detector array (x∗, y∗):
+xλ =x∗ − btat
+at2 + 1 + λ − bw
+aw
+cos[tan−1(at)]
+yλ =at(xλ − x∗) + bt + y∗
+where (atn, btn, awn, bwn) are the calibration coefficients, which are also functions of x∗ and y∗, as defined in equations 4 and 5 (see also Table 7). We derive them based on equations 4 and 5, and figure 15, which shows the potion of the star, P ∗(x∗, y∗), and the photons of a particular wavelength, Pλ(xλ, yλ), with respect to the spectrum trace (red line). Let P1(x1, y1) be the
+projection of P ∗ on the trace. Because P1 is on the trace, from equation 4 we have:
+y1 − y∗ = at(x1 − x∗) + bt (B1)
+Since P1 is the projection of P ∗ on the trace, the vectors −−−→
+P ∗P1 = (x1 − x∗, y1 − y∗) and −V→ = (1, at) (vector parallel to the trace) are orthogonal, so:
+−−−→
+P ∗P1 · V−→ = 0 ⇒ x1 − x∗ + at(y1 − y∗) = 0 B⇒1
+x1 − x∗ + at(at(x1 − x∗) + bt) = 0 ⇒ (x1 − x∗)(1 + a2
+t ) + atbt = 0 ⇒
+x1 = x∗ − atbt
+1 + at2
+(B2)
+Also, from Equation 5, the distance between P1 and Pλ along the spectrum trace is:
+d = λ − bw
+aw
+(B3)
+Finally, let θ be the inclination of the trace (θ = tan−1(at)) with respect to the x-axis of the detector:
+cos(θ) = xλ − x1
+d ⇒ xλ = x1 + d cos[tan−1(at)] B2, B3
+⇒
+xλ = x∗ − atbt
+1 + at2
++ λ − bw
+aw
+cos[tan−1(at)]
+Pλ is also on the trace, so, from equation 4:
+yλ = at(xλ − x∗) + bt + y∗
+
+
+13
+REFERENCES
+Barman, T. 2007, ApJL, 661, L191 Beaulieu, J. P., Kipping, D. M., Batista, V., et al. 2010, MNRAS, 409, 963 Ben-Jaffel, L., & Sona Hosseini, S. 2010, ApJ, 709, 1284 Berta, Z. K., Charbonneau, D., De ́sert, J.-M., et al. 2012, ApJ, 747, 35 Burrows, A., Hubeny, I., Budaj, J., Knutson, H. A., & Charbonneau, D. 2007, ApJL, 668, L171 Charbonneau, D., Brown, T. M., Latham, D. W., & Mayor, M. 2000, ApJL, 529, L45 Charbonneau, D., Brown, T. M., Noyes, R. W., & Gilliland, R. L. 2002, ApJ, 568, 377 Claret, A. 2000, A&A, 363, 1081 Crouzet, N., McCullough, P. R., Burke, C., & Long, D. 2012, ApJ, 761, 7 Crouzet, N., McCullough, P. R., Deming, D., & Madhusudhan, N. 2014, ApJ, 795, 166 Cutri, R. M., Skrutskie, M. F., van Dyk, S., et al. 2003, VizieR Online Data Catalog, 2246 Danielski, C., Deroo, P., Waldmann, I. P., et al. 2014, ApJ, 785, 35 Deming, D., Seager, S., Richardson, L. J., & Harrington, J. 2005, Nature, 434, 740 Deming, D., Wilkins, A., McCullough, P., et al. 2013, ApJ, 774, 95 Dressel, L. 2012, Wide Field Camera 3 Instrument Handbook for Cycle 21 v. 5.0 Dulude, M. J., Baggett, S., & Hilbert, B. 2014, New WFC3/IR Dark Calibration Files, Tech. rep. Espinoza, N., & Jorda ́n, A. 2015, MNRAS, 450, 1879 Evans, T. M., Aigrain, S., Gibson, N., et al. 2015, MNRAS, 451, 680 Fraine, J., Deming, D., Benneke, B., et al. 2014, Nature, 513, 526 Griffith, C. A. 2014, Philosophical Transactions of the Royal Society of London Series A, 372, 30086 Hilbert, B. 2012, WFC3/IR Cycle 19 Bad Pixel Table Update, Tech. rep. —. 2014, Updated non-linearity calibration method for WFC3/IR, Tech. rep. Hollis, M. D. J., Tessenyi, M., & Tinetti, G. 2013, Computer Physics Communications, 184, 2351 Holmstr ̈om, M., Ekenb ̈ack, A., Selsis, F., et al. 2008, Nature, 451, 970 Howarth, I. D. 2011, MNRAS, 413, 1515 Knutson, H. A., Benneke, B., Deming, D., & Homeier, D. 2014a, Nature, 505, 66 Knutson, H. A., Charbonneau, D., Allen, L. E., Burrows, A., & Megeath, S. T. 2008, ApJ, 673, 526 Knutson, H. A., Charbonneau, D., Noyes, R. W., Brown, T. M., & Gilliland, R. L. 2007, ApJ, 655, 564 Knutson, H. A., Dragomir, D., Kreidberg, L., et al. 2014b, ApJ, 794, 155 Kreidberg, L., Bean, J. L., De ́sert, J.-M., et al. 2014a, ApJL, 793, L27 —. 2014b, Nature, 505, 69 Kreidberg, L., Line, M. R., Bean, J. L., et al. 2015, ArXiv e-prints, arXiv:1504.05586 K ̈ummel, M., Kuntschner, H., Walsh, J. R., & Bushouse, H. 2011, Master sky images for the WFC3 G102 and G141 grisms, Tech. rep. Kuntschner, H., Bushouse, H., Ku ̈mmel, M., & Walsh, J. R. 2009, WFC3 SMOV proposal 11552: Calibration of the G141 grism, Tech. rep. Kuntschner, H., Ku ̈mmel, M., Walsh, J. R., & Bushouse, H. 2011, Revised Flux Calibration of the WFC3 G102 and G141 grisms, Tech. rep.
+Kurucz, R. L. 1970, SAO Special Report, 309 Line, M. R., Knutson, H., Wolf, A. S., & Yung, Y. L. 2014, ApJ, 783, 70 Line, M. R., Stevenson, K. B., Bean, J., et al. 2016, ArXiv e-prints, arXiv:1605.08810 Linsky, J. L., Yang, H., France, K., et al. 2010, ApJ, 717, 1291 Madhusudhan, N., & Seager, S. 2009, ApJ, 707, 24 Majeau, C., Agol, E., & Cowan, N. B. 2012, ApJL, 747, L20 McCullough, P. R., Crouzet, N., Deming, D., & Madhusudhan, N. 2014, ApJ, 791, 55 Rajan, A., & et al. 2011, WFC3 Data Handbook v. 2.1 Redfield, S., Endl, M., Cochran, W. D., & Koesterke, L. 2008, ApJL, 673, L87 Rothman, L. S., Gordon, I. E., Barbe, A., et al. 2009, Journal of Quantitative Spectroscopy & Radiative Transfer, 110, 533 Rothman, L. S., Gordon, I. E., Barber, R. J., et al. 2010, Journal of Quantitative Spectroscopy & Radiative Transfer, 111, 2139 Rothman, L. S., Gordon, I. E., Babikov, Y., et al. 2013, Journal of Quantitative Spectroscopy & Radiative Transfer, 130, 4 Sabbi, E., MacKenty, J., & Borders, T. 2010, Proposal 11913-IR Filter Wedge Check, Tech. rep. Schwarz, H., Brogi, M., de Kok, R., Birkby, J., & Snellen, I. 2015, A&A, 576, A111 Sing, D. K., Vidal-Madjar, A., De ́sert, J.-M., Lecavelier des Etangs, A., & Ballester, G. 2008, ApJ, 686, 658 Sing, D. K., Fortney, J. J., Nikolov, N., et al. 2016, Nature, 529, 59 Snellen, I. A. G., Albrecht, S., de Mooij, E. J. W., & Le Poole, R. S. 2008, A&A, 487, 357 Snellen, I. A. G., Brandl, B. R., de Kok, R. J., et al. 2014, Nature, 509, 63 Snellen, I. A. G., de Kok, R. J., de Mooij, E. J. W., & Albrecht, S. 2010, Nature, 465, 1049 Stevenson, K. B., De ́sert, J.-M., Line, M. R., et al. 2014, Science, 346, 838 Swain, M., Deroo, P., Tinetti, G., et al. 2013, Icarus, 225, 432 Swain, M. R., Vasisht, G., Tinetti, G., et al. 2009a, ApJL, 690, L114 Swain, M. R., Tinetti, G., Vasisht, G., et al. 2009b, ApJ, 704, 1616 Swain, M. R., Deroo, P., Griffith, C. A., et al. 2010, Nature, 463, 637 Tinetti, G., Deroo, P., Swain, M. R., et al. 2010, ApJL, 712, L139 Todorov, K. O., Deming, D., Knutson, H. A., et al. 2013, ApJ, 770, 102 Torres, G., Winn, J. N., & Holman, M. J. 2008, ApJ, 677, 1324 Tsiaras, A., Rocchetto, M., Waldmann, I. P., et al. 2016, ApJ, 820, 99 Vidal-Madjar, A., Lecavelier des Etangs, A., De ́sert, J.-M., et al. 2003, Nature, 422, 143 Waldmann, I. P., Rocchetto, M., Tinetti, G., et al. 2015a, ApJ, 813, 13 Waldmann, I. P., Tinetti, G., Deroo, P., et al. 2013, ApJ, 766, 7 Waldmann, I. P., Tinetti, G., Drossart, P., et al. 2012, ApJ, 744, 35 Waldmann, I. P., Tinetti, G., Rocchetto, M., et al. 2015b, ApJ, 802, 107 Wilkins, A. N., Deming, D., Madhusudhan, N., et al. 2014, ApJ, 783, 113 Yurchenko, S. N., & Tennyson, J. 2014, MNRAS, 440, 1649 Zellem, R. T., Griffith, C. A., Deroo, P., Swain, M. R., & Waldmann, I. P. 2014, ApJ, 796, 48

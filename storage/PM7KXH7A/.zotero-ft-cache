@@ -1,0 +1,51 @@
+Skip to content
+Navigation Menu
+retorquere
+/
+zotero-better-bibtex
+Code
+Issues
+40
+Pull requests
+Discussions
+Actions
+Projects
+Wiki
+Security
+Insights
+Releases v7.0.50
+v7.0.50
+Compare
+ github-actions released this 
+· 9 commits to master since this release
+ v7.0.50
+ 6658420
+
+This release is compatible with Zotero 7 and Zotero 7 beta. The last version of BBT that is compatible with Zotero 6 can be found at https://github.com/retorquere/zotero-better-bibtex/releases/tag/v6.7.267. Zotero 6 support is in maintenance mode.
+
+If you use Firefox, make sure to right-click and save the XPI file, not just clicking it.
+
+You can verify you are on the latest version by going into 'Tools' -> 'Addons' in Zotero/Juris-M, clicking the gear icon, and selecting 'Check for updates'
+
+ 
+Assets
+3
+zotero-better-bibtex-7.0.50.xpi
+sha256:29fb40bc9ece5926775d6e80a68f1e68ed607addc6e79a3335da2b65518dd23c
+38.5 MB
+Source code
+(zip)
+Source code
+(tar.gz)
+Footer
+© 2025 GitHub, Inc.
+Footer navigation
+Terms
+Privacy
+Security
+Status
+Community
+Docs
+Contact
+Manage cookies
+Do not share my personal information
